@@ -1,3 +1,10 @@
+cmake_minimum_required(VERSION 3.27)
+
+project(raytracer-starter)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Source files
 set(SOURCES
     "src/main.cpp"
@@ -43,13 +50,23 @@ foreach(RESOURCE ${RESOURCE_FILES})
 endforeach(RESOURCE)
 
 # Simple Directmedia Layer
-set(SDL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs/SDL2-2.30.7")
-add_library(SDL STATIC IMPORTED)
-set_target_properties(SDL PROPERTIES
+if(LINUX)
+  message(STATUS "Linux detected")
+  find_package(SDL2 REQUIRED)
+  include_directories(${SDL2_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
+
+else()
+  message(STATUS "Linux not detected. Assuming win32")
+  set(SDL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs/SDL2-2.30.7")
+  add_library(SDL STATIC IMPORTED)
+  set_target_properties(SDL PROPERTIES
     IMPORTED_LOCATION "${SDL_DIR}/lib/x64/SDL2.lib"
     INTERFACE_INCLUDE_DIRECTORIES "${SDL_DIR}/include"
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL)
+  target_link_libraries(${PROJECT_NAME} PRIVATE SDL)
+
+endif()
 
 file(GLOB_RECURSE DLL_FILES
     "${SDL_DIR}/lib/x64/*.dll"
