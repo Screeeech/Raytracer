@@ -6,6 +6,8 @@
 #include "SDL_surface.h"
 
 // Project includes
+#include <iostream>
+
 #include "Material.h"
 #include "Math.h"
 #include "Matrix.h"
@@ -42,8 +44,19 @@ void Renderer::Render(Scene* pScene) const
             };
 
             const Vector3 rayDirection{ (ndc - Vector3{}).Normalized() };
-            const Vector3 hitRay{ Vector3{}, rayDirection };
-            ColorRGB finalColor{ .r = rayDirection.x, .g = rayDirection.y, .b = rayDirection.z };
+            const Ray viewRay{ .origin = Vector3{}, .direction = rayDirection };
+
+            const Sphere testSphere{ .origin = Vector3{ 0, 0, 100 }, .radius = 50.F, .materialIndex = 0 };
+
+
+            HitRecord closestHit{};
+            GeometryUtils::HitTest_Sphere(testSphere, viewRay, closestHit);
+
+            ColorRGB finalColor{};
+            if(closestHit.didHit)
+            {
+                finalColor = materials[closestHit.materialIndex]->Shade();
+            }
             finalColor.MaxToOne();
 
             m_pBufferPixels[px + (py * m_Width)] = SDL_MapRGB(
