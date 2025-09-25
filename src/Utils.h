@@ -59,9 +59,23 @@ inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray)
 inline bool HitTest_Plane(const Plane& plane, const Ray& ray, HitRecord& hitRecord,
                           bool ignoreHitRecord = false)
 {
-    // todo W1
-    throw std::runtime_error("Not Implemented Yet");
-    return false;
+    const float t{ (Vector3::Dot((plane.origin - ray.origin), plane.normal)) /
+                   Vector3::Dot(ray.direction, plane.normal) };
+
+    if(t < ray.min or t >= ray.max)
+        return false;
+
+    if(ignoreHitRecord)
+        return true;
+
+    const Vector3 hitPoint{ ray.origin + (t * ray.direction) };
+    hitRecord.origin = hitPoint;
+    hitRecord.didHit = true;
+    hitRecord.t = t;
+    hitRecord.materialIndex = plane.materialIndex;
+    hitRecord.normal = plane.normal;
+
+    return true;
 }
 
 inline bool HitTest_Plane(const Plane& plane, const Ray& ray)

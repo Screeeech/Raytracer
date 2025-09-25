@@ -39,6 +39,12 @@ void dae::Scene::GetClosestHit(const Ray& ray, HitRecord& closestHit) const
         if(currentHit.t < closestHit.t)
             closestHit = currentHit;
     }
+    for(const Plane& plane : m_PlaneGeometries)
+    {
+        GeometryUtils::HitTest_Plane(plane, ray, currentHit);
+        if(currentHit.t < closestHit.t)
+            closestHit = currentHit;
+    }
 }
 
 bool Scene::DoesHit(const Ray& ray) const
