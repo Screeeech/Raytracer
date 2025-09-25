@@ -46,21 +46,13 @@ void Renderer::Render(Scene* pScene) const
             const Vector3 rayDirection{ (ndc - Vector3{}).Normalized() };
             const Ray viewRay{ .origin = Vector3{}, .direction = rayDirection };
 
-            const Sphere testSphere{ .origin = Vector3{ 0, 0, 100 }, .radius = 50.F, .materialIndex = 0 };
-
-
             HitRecord closestHit{};
-            GeometryUtils::HitTest_Sphere(testSphere, viewRay, closestHit);
+            pScene->GetClosestHit(viewRay, closestHit);
 
             ColorRGB finalColor{};
             if(closestHit.didHit)
             {
-                const float scaled_t{ (closestHit.t - 50.F) / 40.F };
-                finalColor = {
-                    .r = scaled_t,
-                    .g = scaled_t,
-                    .b = scaled_t,
-                };
+                finalColor = materials[closestHit.materialIndex]->Shade();
             }
             finalColor.MaxToOne();
 
