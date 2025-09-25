@@ -28,7 +28,7 @@ IndentWidth: 4
 IndentWrappedFunctionNames: true
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 2
-NamespaceIndentation: All
+NamespaceIndentation: None
 PointerAlignment: Left
 SortIncludes: CaseInsensitive
 SpaceAfterCStyleCast: false
