@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.27)
 project(raytracer-starter)
 
 set(CMAKE_CXX_STANDARD 20)
+# Source files
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Source files
 set(SOURCES
     "src/main.cpp"
     "src/LeakDetector.cpp"
