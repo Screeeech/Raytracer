@@ -1,5 +1,6 @@
 #pragma once
 #include "Math.h"
+#include <stdexcept>
 
 namespace dae {
 namespace BRDF {

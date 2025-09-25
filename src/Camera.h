@@ -1,52 +1,46 @@
 #pragma once
-#include <SDL_keyboard.h>
-#include <SDL_mouse.h>
 #include "Math.h"
 #include "Timer.h"
+#include <SDL_keyboard.h>
+#include <SDL_mouse.h>
+#include <stdexcept>
 
-namespace dae
-{
-	struct Camera final
-	{
-		Camera() = default;
-		Camera(const Vector3& _origin, float _fovAngle) :
-			origin{ _origin },
-			fovAngle{ _fovAngle }
-		{}
+namespace dae {
+struct Camera final {
+  Camera() = default;
+  Camera(const Vector3 &_origin, float _fovAngle)
+      : origin{_origin}, fovAngle{_fovAngle} {}
 
-		Vector3 origin{};
-		float fovAngle{ 90.f };
+  Vector3 origin{};
+  float fovAngle{90.f};
 
-		Vector3 forward{ Vector3::UnitZ };
-		Vector3 up{ Vector3::UnitY };
-		Vector3 right{ Vector3::UnitX };
+  Vector3 forward{Vector3::UnitZ};
+  Vector3 up{Vector3::UnitY};
+  Vector3 right{Vector3::UnitX};
 
-		float totalPitch{ 0.f };
-		float totalYaw{ 0.f };
+  float totalPitch{0.f};
+  float totalYaw{0.f};
 
-		Matrix cameraToWorld{};
+  Matrix cameraToWorld{};
 
-		Matrix CalculateCameraToWorld()
-		{
-			//todo: W2
-			throw std::runtime_error("Not Implemented Yet");
-			return {};
-		}
+  Matrix CalculateCameraToWorld() {
+    // todo: W2
+    throw std::runtime_error("Not Implemented Yet");
+    return {};
+  }
 
-		void Update(Timer* pTimer)
-		{
-			const float deltaTime = pTimer->GetElapsed();
+  void Update(Timer *pTimer) {
+    const float deltaTime = pTimer->GetElapsed();
 
-			//Keyboard Input
-			const uint8_t* pKeyboardState = SDL_GetKeyboardState(nullptr);
+    // Keyboard Input
+    const uint8_t *pKeyboardState = SDL_GetKeyboardState(nullptr);
 
+    // Mouse Input
+    int mouseX{}, mouseY{};
+    const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
 
-			//Mouse Input
-			int mouseX{}, mouseY{};
-			const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
-
-			//todo: W2
-			//throw std::runtime_error("Not Implemented Yet");
-		}
-	};
-}
+    // todo: W2
+    // throw std::runtime_error("Not Implemented Yet");
+  }
+};
+} // namespace dae
