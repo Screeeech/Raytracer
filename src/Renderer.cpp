@@ -55,7 +55,12 @@ void Renderer::Render(Scene* pScene) const
             ColorRGB finalColor{};
             if(closestHit.didHit)
             {
-                finalColor = materials[closestHit.materialIndex]->Shade();
+                const float scaled_t{ (closestHit.t - 50.F) / 40.F };
+                finalColor = {
+                    .r = scaled_t,
+                    .g = scaled_t,
+                    .b = scaled_t,
+                };
             }
             finalColor.MaxToOne();
 
