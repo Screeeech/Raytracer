@@ -6,28 +6,29 @@ struct SDL_Surface;
 
 namespace dae
 {
-	class Scene;
-	class Renderer final
-	{
-	public:
-		Renderer(SDL_Window* pWindow);
-		~Renderer() = default;
+    class Scene;
 
-		Renderer(const Renderer&) = delete;
-		Renderer(Renderer&&) noexcept = delete;
-		Renderer& operator=(const Renderer&) = delete;
-		Renderer& operator=(Renderer&&) noexcept = delete;
+    class Renderer final
+    {
+    public:
+        explicit Renderer(SDL_Window* pWindow);
+        ~Renderer() = default;
 
-		void Render(Scene* pScene) const;
-		bool SaveBufferToImage() const;
+        Renderer(const Renderer&) = delete;
+        Renderer(Renderer&&) noexcept = delete;
+        Renderer& operator=(const Renderer&) = delete;
+        Renderer& operator=(Renderer&&) noexcept = delete;
 
-	private:
-		SDL_Window* m_pWindow{};
+        void Render(Scene* pScene) const;
+        [[nodiscard]] bool SaveBufferToImage() const;
 
-		SDL_Surface* m_pBuffer{};
-		uint32_t* m_pBufferPixels{};
+    private:
+        SDL_Window* m_pWindow{};
 
-		int m_Width{};
-		int m_Height{};
-	};
-}
+        SDL_Surface* m_pBuffer{};
+        uint32_t* m_pBufferPixels{};
+
+        int m_Width{};
+        int m_Height{};
+    };
+}  // namespace dae
