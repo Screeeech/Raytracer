@@ -1,0 +1,63 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cpp,hpp,h,cxx,cc,hxx,inl,inc}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.{cmake,txt}]
+indent_style = space
+indent_size = 2
+
+[*.{vcxproj,vcxproj.filters,sln}]
+charset = utf-8-bom
+end_of_line = crlf
+indent_size = 2
+indent_style = space
+
+[*.{json,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.{xml,xaml}]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# Scripts
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+
+[*.sh]
+end_of_line = lf
+indent_style = space
+indent_size = 2
+
+[{*.ini,*.props,*.targets}]
+indent_style = space
+indent_size = 2
+
+[.git*]
+indent_style = tab
+indent_size = 4
+
+# Header files from external libraries
+[extern/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset

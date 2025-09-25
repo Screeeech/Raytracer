@@ -1,0 +1,12 @@
+CompileFlags:
+  Add: [-Wall, -Wextra]
+  Remove: [-W*, -D*]
+
+Diagnostics:
+  UnusedIncludes: Strict
+
+Index:
+  Background: Build
+
+Completion:
+  AllScopes: true

@@ -1,0 +1,61 @@
+Checks: >
+  *,
+  -fuchsia-*,
+  -google-*,
+  -zircon-*,
+  -abseil-*,
+  -modernize-use-trailing-return-type,
+  -misc-definitions-in-headers,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-avoid-do-while,
+  -readability-magic-numbers,
+  -readability-braces-around-statements,
+  -readability-implicit-bool-conversion,
+  -readability-identifier-length,
+  -hicpp-braces-around-statements,
+  -hicpp-signed-bitwise,
+  -bugprone-easily-swappable-parameters,
+  -misc-non-private-member-variables-in-classes,
+  -altera-unroll-loops,
+  -llvm-*,
+  -llvmlibc-*,
+  -altera-*,
+  -readability-identifier-naming
+CheckOptions:
+  - { key: readability-identifier-naming.PrivateMemberPrefix, value: m_ }
+  - { key: readability-identifier-naming.LocalPointerPrefix, value: p }
+  - { key: readability-identifier-naming.GlobalPointerPrefix, value: p }
+#   - key: readability-identifier-naming.ClassCase
+#     value: CamelCase
+#   - key: readability-identifier-naming.FunctionCase
+#     value: CamelCase
+#   - key: readability-identifier-naming.VariableCase
+#     value: camelBack
+#   - key: readability-identifier-naming.ParameterCase
+#     value: camelBack
+#   - key: readability-identifier-naming.ConstantCase
+#     value: camelBack
+#   - key: readability-identifier-naming.StructCase
+#     value: CamelCase
+#   - key: readability-identifier-naming.EnumCase
+#     value: CamelCase
+#   - key: readability-identifier-naming.PrivateMemberPrefix
+#     value: m_
+#   - key: readability-identifier-naming.ProtectedMemberPrefix
+#     value: m_
+#   - key: readability-identifier-naming.MemberCase
+#     value: camelBack
+#   - key: readability-identifier-naming.GlobalVariablePrefix
+#     value: g_
+#   - key: readability-identifier-naming.GlobalVariableCase
+#     value: CamelCase
+#   - key: readability-identifier-naming.MacroDefinitionCase
+#     value: UPPER_CASE
+  # - key: readability-identifier-naming.TypeAliasCase
+  #   value: CamelCase
+  # - key: readability-identifier-naming.TypedefCase
+  #   value: CamelCase
+  # - key: readability-identifier-naming.TemplateParameterCase
+  #   value: CamelCase
