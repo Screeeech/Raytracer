@@ -10,6 +10,16 @@
       "postDebugTask": "clean",
       "expressions": "native",
       "program": "${workspaceFolder}/build/raytracer-starter"
+    },
+    {
+      "type": "codelldb",
+      "request": "launch",
+      "name": "Release C++",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "build-release",
+      "postDebugTask": "clean",
+      "expressions": "native",
+      "program": "${workspaceFolder}/build/raytracer-starter"
     }
   ]
 }
