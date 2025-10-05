@@ -1,46 +1,58 @@
 #pragma once
-#include "Math.h"
-#include "Timer.h"
 #include <SDL_keyboard.h>
 #include <SDL_mouse.h>
+
 #include <stdexcept>
 
-namespace dae {
-struct Camera final {
-  Camera() = default;
-  Camera(const Vector3 &_origin, float _fovAngle)
-      : origin{_origin}, fovAngle{_fovAngle} {}
+#include "Math.h"
+#include "Matrix.h"
+#include "Timer.h"
 
-  Vector3 origin{};
-  float fovAngle{90.f};
+namespace dae
+{
+struct Camera final
+{
+    Camera() = default;
 
-  Vector3 forward{Vector3::UnitZ};
-  Vector3 up{Vector3::UnitY};
-  Vector3 right{Vector3::UnitX};
+    Camera(const Vector3& _origin, float _fovAngle)
+        : origin{ _origin }
+        , fovAngle{ _fovAngle }
+    {
+    }
 
-  float totalPitch{0.f};
-  float totalYaw{0.f};
+    Vector3 origin;
+    float fovAngle{ 90.f };
 
-  Matrix cameraToWorld{};
+    Vector3 forward{ Vector3::UnitZ };
+    Vector3 up{ Vector3::UnitY };
+    Vector3 right{ Vector3::UnitX };
 
-  Matrix CalculateCameraToWorld() {
-    // todo: W2
-    throw std::runtime_error("Not Implemented Yet");
-    return {};
-  }
+    float totalPitch{ 0.f };
+    float totalYaw{ 0.f };
 
-  void Update(Timer *pTimer) {
-    const float deltaTime = pTimer->GetElapsed();
+    Matrix cameraToWorld;
 
-    // Keyboard Input
-    const uint8_t *pKeyboardState = SDL_GetKeyboardState(nullptr);
+    Matrix CalculateCameraToWorld()
+    {
+        Matrix ONB{ { right.x, up.x, forward.x, origin.x },
+                    { right.y, up.y, forward.y, origin.y },
+                    { right.z, up.z, forward.z, origin.z },
+                    { 0, 0, 0, 1 } };
+        cameraToWorld = Matrix::Inverse(ONB);
+        return cameraToWorld;
+    }
 
-    // Mouse Input
-    int mouseX{}, mouseY{};
-    const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
+    void Update(Timer* pTimer)
+    {
+        const float deltaTime = pTimer->GetElapsed();
 
-    // todo: W2
-    // throw std::runtime_error("Not Implemented Yet");
-  }
+        // Keyboard Input
+        const uint8_t* pKeyboardState = SDL_GetKeyboardState(nullptr);
+
+        // Mouse Input
+        int mouseX{};
+        int mouseY{};
+        const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
+    }
 };
-} // namespace dae
+}  // namespace dae

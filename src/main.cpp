@@ -48,7 +48,8 @@ int main(int argc, char* args[])
     auto* const pTimer = new Timer();
     auto* const pRenderer = new Renderer(pWindow);
 
-    auto* const pScene = new Scene_W1();
+    // auto* const pScene = new Scene_W1();
+    auto* const pScene = new Scene_W2();
     pScene->Initialize();
 
     // Start loop

@@ -71,7 +71,7 @@ protected:
     std::vector<Light> m_Lights;
     std::vector<Material*> m_Materials;
 
-    Camera m_Camera{};
+    Camera m_Camera;
 
     Sphere* AddSphere(const Vector3& origin, float radius, unsigned char materialIndex = 0);
     Plane* AddPlane(const Vector3& origin, const Vector3& normal, unsigned char materialIndex = 0);
@@ -94,6 +94,20 @@ public:
     Scene_W1(Scene_W1&&) noexcept = delete;
     Scene_W1& operator=(const Scene_W1&) = delete;
     Scene_W1& operator=(Scene_W1&&) noexcept = delete;
+
+    void Initialize() override;
+};
+
+class Scene_W2 final : public Scene
+{
+public:
+    Scene_W2() = default;
+    ~Scene_W2() override = default;
+
+    Scene_W2(Scene_W2&&) = delete;
+    Scene_W2(const Scene_W2&) = delete;
+    Scene_W2& operator=(Scene_W2&&) = delete;
+    Scene_W2& operator=(const Scene_W2&) = delete;
 
     void Initialize() override;
 };
