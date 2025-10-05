@@ -53,8 +53,8 @@ void Renderer::Render(Scene* pScene) const
 
 
             const Vector3 localRayDirection{ (ndc - Vector3{}).Normalized() };
-            // const Vector3 worldRayDirection =
-            //     camera.CalculateCameraToWorld().TransformVector(localRayDirection);
+            const Vector3 worldRayDirection =
+                camera.CalculateCameraToWorld().TransformVector(localRayDirection);
 
             const Ray viewRay{ .origin = camera.origin, .direction = localRayDirection };
 
