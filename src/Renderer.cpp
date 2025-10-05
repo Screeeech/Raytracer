@@ -1,6 +1,7 @@
 // External includes
 #include "ColorRGB.h"
 #include "DataTypes.h"
+#include "MathHelpers.h"
 #include "SDL.h"
 #include "SDL_pixels.h"
 #include "SDL_surface.h"
@@ -38,13 +39,24 @@ void Renderer::Render(Scene* pScene) const
     {
         for(int py{}; py < m_Height; ++py)
         {
-            const Vector3 ndc{
-                ((2.F * (static_cast<float>(px) + 0.5F) / static_cast<float>(m_Width)) - 1) * aspectRatio,
-                1 - ((2.F * (static_cast<float>(py) + 0.5F) / static_cast<float>(m_Width)) * aspectRatio), 1
-            };
+            // TODO: Optimise by caching FOV
+            const float a{ PI / 6 };  // angle in radians
+            const float fov{ tanf(a / 2) };
 
-            const Vector3 rayDirection{ (ndc - Vector3{}).Normalized() };
-            const Ray viewRay{ .origin = Vector3{}, .direction = rayDirection };
+            // Get camera position
+            const Vector3 ndc{ ((2.F * (static_cast<float>(px) + 0.5F) / static_cast<float>(m_Width)) - 1) *
+                                   aspectRatio * fov,
+                               (1 - ((2.F * (static_cast<float>(py) + 0.5F) / static_cast<float>(m_Width)) *
+                                     aspectRatio)) *
+                                   fov,
+                               1 };
+
+
+            const Vector3 localRayDirection{ (ndc - Vector3{}).Normalized() };
+            // const Vector3 worldRayDirection =
+            //     camera.CalculateCameraToWorld().TransformVector(localRayDirection);
+
+            const Ray viewRay{ .origin = camera.origin, .direction = localRayDirection };
 
             HitRecord closestHit{};
             pScene->GetClosestHit(viewRay, closestHit);
