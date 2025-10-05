@@ -40,8 +40,7 @@ void Renderer::Render(Scene* pScene) const
         for(int py{}; py < m_Height; ++py)
         {
             // TODO: Optimise by caching FOV
-            const float a{ PI / 6 };  // angle in radians
-            const float fov{ tanf(a / 2) };
+            const float fov{ camera.GetFov() };
 
             // Get camera position
             const Vector3 ndc{ ((2.F * (static_cast<float>(px) + 0.5F) / static_cast<float>(m_Width)) - 1) *
@@ -51,12 +50,12 @@ void Renderer::Render(Scene* pScene) const
                                    fov,
                                1 };
 
+            const Matrix cameraToWorld{ camera.CalculateCameraToWorld() };
 
-            const Vector3 localRayDirection{ (ndc - Vector3{}).Normalized() };
-            const Vector3 worldRayDirection =
-                camera.CalculateCameraToWorld().TransformVector(localRayDirection);
+            const Vector3 localRayDirection{ (ndc).Normalized() };
+            const Vector3 worldRayDirection = cameraToWorld.TransformVector(localRayDirection);
 
-            const Ray viewRay{ .origin = camera.origin, .direction = localRayDirection };
+            const Ray viewRay{ .origin = camera.origin, .direction = worldRayDirection };
 
             HitRecord closestHit{};
             pScene->GetClosestHit(viewRay, closestHit);

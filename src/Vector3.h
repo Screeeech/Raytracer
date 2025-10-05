@@ -14,12 +14,12 @@ struct Vector3 final
     Vector3() = default;
     Vector3(float _x, float _y, float _z);
     Vector3(const Vector3& from, const Vector3& to);
-    Vector3(const Vector4& v);
+    explicit Vector3(const Vector4& v);
 
-    float Magnitude() const;
-    float SqrMagnitude() const;
+    [[nodiscard]] float Magnitude() const;
+    [[nodiscard]] float SqrMagnitude() const;
     float Normalize();
-    Vector3 Normalized() const;
+    [[nodiscard]] Vector3 Normalized() const;
 
     static float Dot(const Vector3& v1, const Vector3& v2);
     static Vector3 Cross(const Vector3& v1, const Vector3& v2);
@@ -27,9 +27,9 @@ struct Vector3 final
     static Vector3 Reject(const Vector3& v1, const Vector3& v2);
     static Vector3 Reflect(const Vector3& v1, const Vector3& v2);
 
-    Vector4 ToPoint4() const;
-    Vector4 ToVector4() const;
-    Vector2 GetXY() const;
+    [[nodiscard]] Vector4 ToPoint4() const;
+    [[nodiscard]] Vector4 ToVector4() const;
+    [[nodiscard]] Vector2 GetXY() const;
 
     // Member Operators
     Vector3 operator*(float scale) const;
