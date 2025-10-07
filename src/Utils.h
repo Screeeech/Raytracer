@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <fstream>
@@ -20,26 +21,42 @@ inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray, HitRecord& hitR
                            bool ignoreHitRecord = false)
 {
     // Quadratic equation
-    const float a{ Vector3::Dot(ray.direction, ray.direction) };
-    const float b{ 2 * Vector3::Dot(ray.direction, ray.origin - sphere.origin) };
-    const float c{ Vector3::Dot((ray.origin - sphere.origin), (ray.origin - sphere.origin)) -
-                   (sphere.radius * sphere.radius) };
+    // const float a{ Vector3::Dot(ray.direction, ray.direction) };
+    // const float b{ 2 * Vector3::Dot(ray.direction, ray.origin - sphere.origin) };
+    // const float c{ Vector3::Dot((ray.origin - sphere.origin), (ray.origin - sphere.origin)) -
+    //                (sphere.radius * sphere.radius) };
+    //
+    // const float discriminant{ (b * b) - (4 * a * c) };
+    // if(discriminant <= 0)
+    //     return false;
+    //
+    // float t{ (-b - sqrtf(discriminant)) / (2 * a) };
+    // if(t < ray.min)
+    //     t = (-b + sqrtf(discriminant)) / (2 * a);
 
-    const float discriminant{ (b * b) - (4 * a * c) };
-    if(discriminant <= 0)
+    // Geometric equation
+    const Vector3 rayToSpehere{ sphere.origin - ray.origin };
+    const float originRayDistanceSqr{ Vector3::Reject(rayToSpehere, ray.direction).SqrMagnitude() };
+
+    if(originRayDistanceSqr >= (sphere.radius * sphere.radius))
         return false;
 
-    float t{ (-b - sqrtf(discriminant)) / (2 * a) };
-    if(t < ray.min)
-        t = (-b + sqrtf(discriminant)) / (2 * a);
+    const float tRayCenter{ Vector3::Dot(rayToSpehere, ray.direction) };
+    const float tCenterHit{ sqrtf((sphere.radius * sphere.radius) - originRayDistanceSqr) };
+
+    const float t1{ tRayCenter - tCenterHit };
+    const float t2{ tRayCenter + tCenterHit };
+
+    if(t1 < ray.min or t1 > ray.max)
+        return false;
 
     if(ignoreHitRecord)
         return true;
 
-    const Vector3 hitPoint{ ray.origin + (t * ray.direction) };
+    const Vector3 hitPoint{ ray.origin + (t1 * ray.direction) };
     hitRecord.origin = hitPoint;
     hitRecord.didHit = true;
-    hitRecord.t = t;
+    hitRecord.t = t1;
     hitRecord.materialIndex = sphere.materialIndex;
     hitRecord.normal = (hitPoint - sphere.origin).Normalized();
 

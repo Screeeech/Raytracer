@@ -99,7 +99,7 @@ struct Camera final
 
     [[nodiscard]] float GetFov() const
     {
-        return tanf(((PI / 180.f) * fovAngle) / 2);
+        return tanf((PI / 180.f) * fovAngle / 2);
     }
 };
 }  // namespace dae
