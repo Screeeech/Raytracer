@@ -43,11 +43,8 @@ void Renderer::Render(Scene* pScene) const
             const float fov{ camera.GetFov() };
 
             // Get camera position
-            const Vector3 ndc{ ((2.F * (static_cast<float>(px) + 0.5F) / static_cast<float>(m_Width)) - 1) *
-                                   aspectRatio * fov,
-                               (1 - ((2.F * (static_cast<float>(py) + 0.5F) / static_cast<float>(m_Width)) *
-                                     aspectRatio)) *
-                                   fov,
+            const Vector3 ndc{ ((2.F * (static_cast<float>(px) + 0.5F) / static_cast<float>(m_Width)) - 1) * aspectRatio * fov,
+                               (1 - ((2.F * (static_cast<float>(py) + 0.5F) / static_cast<float>(m_Width)) * aspectRatio)) * fov,
                                1 };
 
             const Matrix cameraToWorld{ camera.CalculateCameraToWorld() };
@@ -64,12 +61,23 @@ void Renderer::Render(Scene* pScene) const
             if(closestHit.didHit)
             {
                 finalColor = materials[closestHit.materialIndex]->Shade();
+                for(const auto& light : lights)
+                {
+                    Vector3 directionToLight{ LightUtils::GetDirectionToLight(light,
+                                                                              closestHit.origin + (closestHit.normal * 0.01f)) };
+                    const float distanceToLight{ directionToLight.Normalize() };
+                    const Ray hitToLightRay{
+                        .origin = closestHit.origin, .direction = directionToLight, .min = 0.0001f, .max = distanceToLight
+                    };
+                    if(pScene->DoesHit(hitToLightRay))
+                        finalColor *= 0.5f;
+                }
             }
             finalColor.MaxToOne();
 
-            m_pBufferPixels[px + (py * m_Width)] = SDL_MapRGB(
-                m_pBuffer->format, static_cast<uint8_t>(finalColor.r * 255),
-                static_cast<uint8_t>(finalColor.g * 255), static_cast<uint8_t>(finalColor.b * 255));
+            m_pBufferPixels[px + (py * m_Width)] =
+                SDL_MapRGB(m_pBuffer->format, static_cast<uint8_t>(finalColor.r * 255), static_cast<uint8_t>(finalColor.g * 255),
+                           static_cast<uint8_t>(finalColor.b * 255));
         }
     }
 

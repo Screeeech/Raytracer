@@ -17,8 +17,7 @@ namespace GeometryUtils
 #pragma region Sphere HitTest
 
 // SPHERE HIT-TESTS
-inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray, HitRecord& hitRecord,
-                           bool ignoreHitRecord = false)
+inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
     // Quadratic equation
     // const float a{ Vector3::Dot(ray.direction, ray.direction) };
@@ -73,11 +72,9 @@ inline bool HitTest_Sphere(const Sphere& sphere, const Ray& ray)
 #pragma region Plane HitTest
 
 // PLANE HIT-TESTS
-inline bool HitTest_Plane(const Plane& plane, const Ray& ray, HitRecord& hitRecord,
-                          bool ignoreHitRecord = false)
+inline bool HitTest_Plane(const Plane& plane, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
-    const float t{ (Vector3::Dot((plane.origin - ray.origin), plane.normal)) /
-                   Vector3::Dot(ray.direction, plane.normal) };
+    const float t{ (Vector3::Dot((plane.origin - ray.origin), plane.normal)) / Vector3::Dot(ray.direction, plane.normal) };
 
     if(t < ray.min or t >= ray.max)
         return false;
@@ -105,8 +102,7 @@ inline bool HitTest_Plane(const Plane& plane, const Ray& ray)
 #pragma region Triangle HitTest
 
 // TRIANGLE HIT-TESTS
-inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord,
-                             bool ignoreHitRecord = false)
+inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
     // TODO: W5
     throw std::runtime_error("Not Implemented Yet");
@@ -122,8 +118,7 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
 #pragma endregion
 #pragma region TriangeMesh HitTest
 
-inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord,
-                                 bool ignoreHitRecord = false)
+inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
     // TODO: W5
     throw std::runtime_error("Not Implemented Yet");
@@ -144,9 +139,7 @@ namespace LightUtils
 // Direction from target to light
 inline Vector3 GetDirectionToLight(const Light& light, const Vector3 origin)
 {
-    // TODO: W3
-    throw std::runtime_error("Not Implemented Yet");
-    return {};
+    return light.origin - origin;
 }
 
 inline ColorRGB GetRadiance(const Light& light, const Vector3& target)
@@ -163,8 +156,8 @@ namespace Utils
 #pragma warning(push)
 #pragma warning(disable : 4505)  // Warning unreferenced local function
 
-static bool ParseOBJ(const std::string& filename, std::vector<Vector3>& positions,
-                     std::vector<Vector3>& normals, std::vector<int>& indices)
+static bool ParseOBJ(const std::string& filename, std::vector<Vector3>& positions, std::vector<Vector3>& normals,
+                     std::vector<int>& indices)
 {
     std::ifstream file(filename);
     if(!file)

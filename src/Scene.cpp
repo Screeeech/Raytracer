@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include <algorithm>
+
 #include "DataTypes.h"
 #include "Material.h"
 #include "Utils.h"
@@ -49,9 +51,10 @@ void dae::Scene::GetClosestHit(const Ray& ray, HitRecord& closestHit) const
 
 bool Scene::DoesHit(const Ray& ray) const
 {
-    // TODO: W2
-    throw std::runtime_error("Not Implemented Yet");
-    return false;
+    return std::ranges::any_of(m_SphereGeometries.cbegin(), m_SphereGeometries.cend(),
+                               [ray](const Sphere& sphere) { return GeometryUtils::HitTest_Sphere(sphere, ray); }) or
+        std::ranges::any_of(m_PlaneGeometries.cbegin(), m_PlaneGeometries.cend(),
+                            [ray](const Plane& plane) { return GeometryUtils::HitTest_Plane(plane, ray); });
 }
 
 #pragma region Scene Helpers
