@@ -10,19 +10,19 @@ namespace BRDF {
  * \return Lambert Diffuse Color
  */
 static ColorRGB Lambert(float kd, const ColorRGB &cd) {
-  // todo: W3
+  // TODO:: W3
   throw std::runtime_error("Not Implemented Yet");
   return {};
 }
 
 static ColorRGB Lambert(const ColorRGB &kd, const ColorRGB &cd) {
-  // todo: W3
+  // TODO:: W3
   throw std::runtime_error("Not Implemented Yet");
   return {};
 }
 
 /**
- * \brief todo
+ * \brief TODO:
  * \param ks Specular Reflection Coefficient
  * \param exp Phong Exponent
  * \param l Incoming (incident) Light Direction
@@ -32,7 +32,7 @@ static ColorRGB Lambert(const ColorRGB &kd, const ColorRGB &cd) {
  */
 static ColorRGB Phong(float ks, float exp, const Vector3 &l, const Vector3 &v,
                       const Vector3 &n) {
-  // todo: W3
+  // TODO:: W3
   throw std::runtime_error("Not Implemented Yet");
   return {};
 }
@@ -48,7 +48,7 @@ static ColorRGB Phong(float ks, float exp, const Vector3 &l, const Vector3 &v,
  */
 static ColorRGB FresnelFunction_Schlick(const Vector3 &h, const Vector3 &v,
                                         const ColorRGB &f0) {
-  // todo: W3
+  // TODO:: W3
   throw std::runtime_error("Not Implemented Yet");
   return {};
 }
@@ -63,7 +63,7 @@ static ColorRGB FresnelFunction_Schlick(const Vector3 &h, const Vector3 &v,
  */
 static float NormalDistribution_GGX(const Vector3 &n, const Vector3 &h,
                                     float roughness) {
-  // todo: W3
+  // TODO:: W3
   throw std::runtime_error("Not Implemented Yet");
   return {};
 }
@@ -78,7 +78,7 @@ static float NormalDistribution_GGX(const Vector3 &n, const Vector3 &h,
  */
 static float GeometryFunction_SchlickGGX(const Vector3 &n, const Vector3 &v,
                                          float roughness) {
-  // todo: W3
+  // TODO:: W3
   throw std::runtime_error("Not Implemented Yet");
   return {};
 }
@@ -94,7 +94,7 @@ static float GeometryFunction_SchlickGGX(const Vector3 &n, const Vector3 &v,
  */
 static float GeometryFunction_Smith(const Vector3 &n, const Vector3 &v,
                                     const Vector3 &l, float roughness) {
-  // todo: W3
+  // TODO:: W3
   throw std::runtime_error("Not Implemented Yet");
   return {};
 }

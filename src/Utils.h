@@ -108,7 +108,7 @@ inline bool HitTest_Plane(const Plane& plane, const Ray& ray)
 inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord,
                              bool ignoreHitRecord = false)
 {
-    // todo W5
+    // TODO: W5
     throw std::runtime_error("Not Implemented Yet");
     return false;
 }
@@ -125,7 +125,7 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
 inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord,
                                  bool ignoreHitRecord = false)
 {
-    // todo W5
+    // TODO: W5
     throw std::runtime_error("Not Implemented Yet");
     return false;
 }
@@ -144,14 +144,14 @@ namespace LightUtils
 // Direction from target to light
 inline Vector3 GetDirectionToLight(const Light& light, const Vector3 origin)
 {
-    // todo W3
+    // TODO: W3
     throw std::runtime_error("Not Implemented Yet");
     return {};
 }
 
 inline ColorRGB GetRadiance(const Light& light, const Vector3& target)
 {
-    // todo W3
+    // TODO: W3
     throw std::runtime_error("Not Implemented Yet");
     return {};
 }

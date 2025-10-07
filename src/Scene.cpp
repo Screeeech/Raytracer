@@ -49,7 +49,7 @@ void dae::Scene::GetClosestHit(const Ray& ray, HitRecord& closestHit) const
 
 bool Scene::DoesHit(const Ray& ray) const
 {
-    // todo W2
+    // TODO: W2
     throw std::runtime_error("Not Implemented Yet");
     return false;
 }
