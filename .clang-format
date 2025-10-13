@@ -5,7 +5,7 @@ AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignEscapedNewlines: Left
-AlignOperands: AlignAfterOperator
+AlignOperands: DontAlign
 AllowAllArgumentsOnNextLine: true
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: Empty
@@ -17,7 +17,7 @@ BreakBeforeConceptDeclarations: Always
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 SeparateDefinitionBlocks: Always
-ColumnLimit: 110
+ColumnLimit: 130
 CompactNamespaces: false
 PackConstructorInitializers: Never
 Cpp11BracedListStyle: false
