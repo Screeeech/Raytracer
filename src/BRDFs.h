@@ -1,24 +1,26 @@
 #pragma once
-#include "Math.h"
+#include <cassert>
 #include <stdexcept>
 
-namespace dae {
-namespace BRDF {
+#include "Math.h"
+#include "MathHelpers.h"
+
+namespace dae::BRDF
+{
 /**
  * \param kd Diffuse Reflection Coefficient
  * \param cd Diffuse Color
  * \return Lambert Diffuse Color
  */
-static ColorRGB Lambert(float kd, const ColorRGB &cd) {
-  // TODO:: W3
-  throw std::runtime_error("Not Implemented Yet");
-  return {};
+static ColorRGB Lambert(float kd, const ColorRGB& cd)
+{
+    assert(kd >= 0.f && kd <= 1.f);
+    return (kd * cd) / PI;
 }
 
-static ColorRGB Lambert(const ColorRGB &kd, const ColorRGB &cd) {
-  // TODO:: W3
-  throw std::runtime_error("Not Implemented Yet");
-  return {};
+static ColorRGB Lambert(const ColorRGB& kd, const ColorRGB& cd)
+{
+    return (kd * cd) / PI;
 }
 
 /**
@@ -30,11 +32,11 @@ static ColorRGB Lambert(const ColorRGB &kd, const ColorRGB &cd) {
  * \param n Normal of the Surface
  * \return Phong Specular Color
  */
-static ColorRGB Phong(float ks, float exp, const Vector3 &l, const Vector3 &v,
-                      const Vector3 &n) {
-  // TODO:: W3
-  throw std::runtime_error("Not Implemented Yet");
-  return {};
+static ColorRGB Phong(float ks, float exp, const Vector3& l, const Vector3& v, const Vector3& n)
+{
+    // TODO:: W3
+    throw std::runtime_error("Not Implemented Yet");
+    return {};
 }
 
 /**
@@ -46,11 +48,11 @@ static ColorRGB Phong(float ks, float exp, const Vector3 &l, const Vector3 &v,
  * (Metal)
  * \return
  */
-static ColorRGB FresnelFunction_Schlick(const Vector3 &h, const Vector3 &v,
-                                        const ColorRGB &f0) {
-  // TODO:: W3
-  throw std::runtime_error("Not Implemented Yet");
-  return {};
+static ColorRGB FresnelFunction_Schlick(const Vector3& h, const Vector3& v, const ColorRGB& f0)
+{
+    // TODO:: W3
+    throw std::runtime_error("Not Implemented Yet");
+    return {};
 }
 
 /**
@@ -61,11 +63,11 @@ static ColorRGB FresnelFunction_Schlick(const Vector3 &h, const Vector3 &v,
  * \param roughness Roughness of the material
  * \return BRDF Normal Distribution Term using Trowbridge-Reitz GGX
  */
-static float NormalDistribution_GGX(const Vector3 &n, const Vector3 &h,
-                                    float roughness) {
-  // TODO:: W3
-  throw std::runtime_error("Not Implemented Yet");
-  return {};
+static float NormalDistribution_GGX(const Vector3& n, const Vector3& h, float roughness)
+{
+    // TODO:: W3
+    throw std::runtime_error("Not Implemented Yet");
+    return {};
 }
 
 /**
@@ -76,11 +78,11 @@ static float NormalDistribution_GGX(const Vector3 &n, const Vector3 &h,
  * \param roughness Roughness of the material
  * \return BRDF Geometry Term using SchlickGGX
  */
-static float GeometryFunction_SchlickGGX(const Vector3 &n, const Vector3 &v,
-                                         float roughness) {
-  // TODO:: W3
-  throw std::runtime_error("Not Implemented Yet");
-  return {};
+static float GeometryFunction_SchlickGGX(const Vector3& n, const Vector3& v, float roughness)
+{
+    // TODO:: W3
+    throw std::runtime_error("Not Implemented Yet");
+    return {};
 }
 
 /**
@@ -92,12 +94,11 @@ static float GeometryFunction_SchlickGGX(const Vector3 &n, const Vector3 &v,
  * \return BRDF Geometry Term using Smith (> SchlickGGX(n,v,roughness) *
  * SchlickGGX(n,l,roughness))
  */
-static float GeometryFunction_Smith(const Vector3 &n, const Vector3 &v,
-                                    const Vector3 &l, float roughness) {
-  // TODO:: W3
-  throw std::runtime_error("Not Implemented Yet");
-  return {};
+static float GeometryFunction_Smith(const Vector3& n, const Vector3& v, const Vector3& l, float roughness)
+{
+    // TODO:: W3
+    throw std::runtime_error("Not Implemented Yet");
+    return {};
 }
 
-} // namespace BRDF
-} // namespace dae
+}  // namespace dae::BRDF

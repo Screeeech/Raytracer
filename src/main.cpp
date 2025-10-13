@@ -38,8 +38,8 @@ int main(int argc, char* args[])
     const uint32_t width = 640;
     const uint32_t height = 480;
 
-    SDL_Window* pWindow = SDL_CreateWindow("RayTracer - Lily Botha", SDL_WINDOWPOS_UNDEFINED,
-                                           SDL_WINDOWPOS_UNDEFINED, width, height, 0);
+    SDL_Window* pWindow =
+        SDL_CreateWindow("RayTracer - Lily Botha", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);
 
     if(!pWindow)
         return 1;
@@ -49,7 +49,7 @@ int main(int argc, char* args[])
     auto* const pRenderer = new Renderer(pWindow);
 
     // auto* const pScene = new Scene_W1();
-    auto* const pScene = new Scene_W2();
+    auto* const pScene = new Scene_W3();
     pScene->Initialize();
 
     // Start loop

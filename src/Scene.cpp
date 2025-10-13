@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "ColorRGB.h"
 #include "DataTypes.h"
 #include "Material.h"
 #include "Utils.h"
@@ -173,6 +174,70 @@ void Scene_W2::Initialize()
     AddSphere({ 1.75f, 3.f, 0.f }, .75f, matId_Solid_Blue);
     // Light
     AddPointLight({ 0.f, 5.f, -5.f }, 70.f, colors::White);
+}
+
+void Scene_W3::Initialize()
+{
+    m_Camera.origin = { 0.f, 1.f, -5.f };
+    m_Camera.fovAngle = 45.f;
+
+    const auto matLambert_Red = AddMaterial(new Material_Lambert(colors::Red, 1.f));
+    const auto matLambert_Blue = AddMaterial(new Material_Lambert(colors::Blue, 1.f));
+    const auto matLambert_Yellow = AddMaterial(new Material_Lambert(colors::Yellow, 1.f));
+
+    AddSphere({ -.75f, 1.f, 0.f }, 1.f, matLambert_Red);
+    AddSphere({ .75f, 1.f, 0.f }, 1.f, matLambert_Blue);
+
+    AddPlane({ 0.f, 0.f, 0.f }, { 0.f, 1.f, 0.f }, matLambert_Yellow);
+
+    AddPointLight({ 0.f, 5.f, 5.f }, 25.f, colors::White);  // Behind the primitives
+    AddPointLight({ 0.f, 2.5f, -5.f }, 25.f, colors::White);
+
+
+    // m_Camera.origin = { 0.f, 3.f, -9.f };
+    // m_Camera.fovAngle = 45.f;
+    //
+    // unsigned char const matCT_GrayRoughMetal{ AddMaterial(
+    //     new Material_CookTorrence({ .r = .972f, .g = .960f, .b = .915f }, 1.f, 1.f)) };
+    // unsigned char const matCT_GrayMediumMetal{ AddMaterial(
+    //     new Material_CookTorrence({ .r = .972f, .g = .960f, .b = .915f }, 1.f, .6f)) };
+    // unsigned char const matCT_GraySmoothMetal{ AddMaterial(
+    //     new Material_CookTorrence({ .r = .972f, .g = .960f, .b = .915f }, 1.f, .1f)) };
+    // unsigned char const matCT_GrayRoughPlastic{ AddMaterial(
+    //     new Material_CookTorrence({ .r = .75f, .g = .75f, .b = .75f }, 0.f, 1.f)) };
+    // unsigned char const matCT_GrayMediumPlastic{ AddMaterial(
+    //     new Material_CookTorrence({ .r = .75f, .g = .75f, .b = .75f }, 0.f, .6f)) };
+    // unsigned char const matCT_GraySmoothPlastic{ AddMaterial(
+    //     new Material_CookTorrence({ .r = .75f, .g = .75f, .b = .75f }, 0.f, .1f)) };
+    //
+    // unsigned char const matLambert_GrayBlue{ AddMaterial(new Material_Lambert({ .r = .49f, .g = .57f, .b = .57f }, 1.f)) };
+    //
+    // // Planes
+    // AddPlane(Vector3{ 0.f, 0.f, 10.f }, Vector3{ 0.f, 0.f, -1.f }, matLambert_GrayBlue);  // Back
+    // AddPlane(Vector3{ 0.f, 0.f, 0.f }, Vector3{ 0.f, 1.f, 0.f }, matLambert_GrayBlue);    // Bottom
+    // AddPlane(Vector3{ 0.f, 10.f, 0.f }, Vector3{ 0.f, -1.f, 0.f }, matLambert_GrayBlue);  // Top
+    // AddPlane(Vector3{ 5.f, 0.f, 0.f }, Vector3{ -1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Right
+    // AddPlane(Vector3{ -5.f, 0.f, 0.f }, Vector3{ 1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Left
+    //
+    // auto const matLambertPhong1{ AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 3.f)) };
+    // auto const matLambertPhong2{ AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 15.f)) };
+    // auto const matLambertPhong3{ AddMaterial(new Material_LambertPhong(colors::Blue, 0.5f, 0.5f, 50.f)) };
+    //
+    // // Spheres
+    // AddSphere({ -1.75f, 1.f, 0.f }, .75f, matCT_GrayRoughMetal);
+    // AddSphere({ 0.f, 1.f, 0.f }, .75f, matCT_GrayMediumMetal);
+    // AddSphere({ 1.75f, 1.f, 0.f }, .75f, matCT_GraySmoothMetal);
+    // // AddSphere({-1.75f, 1.f, 0.f}, .75f, matLambertPhong1);
+    // // AddSphere({0.f, 1.f, 0.f}, .75f, matLambertPhong2);
+    // // AddSphere({1.75f, 1.f, 0.f}, .75f, matLambertPhong3);
+    // AddSphere({ -1.75f, 3.f, 0.f }, .75f, matCT_GrayRoughPlastic);
+    // AddSphere({ 0.f, 3.f, 0.f }, .75f, matCT_GrayMediumPlastic);
+    // AddSphere({ 1.75f, 3.f, 0.f }, .75f, matCT_GraySmoothPlastic);
+    //
+    // // Light
+    // AddPointLight({ 0.f, 5.f, 5.f }, 50.f, ColorRGB{ .r = 1.f, .g = .61f, .b = .45f });    // Backlight
+    // AddPointLight({ -2.5f, 5.f, -5.f }, 70.f, ColorRGB{ .r = 1.f, .g = .8f, .b = .45f });  // Front light left
+    // AddPointLight({ 2.5f, 2.5f, -5.f }, 50.f, ColorRGB{ .r = .34f, .g = .47f, .b = .68f });
 }
 
 #pragma endregion

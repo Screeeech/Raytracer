@@ -22,7 +22,26 @@ public:
     void Render(Scene* pScene) const;
     [[nodiscard]] bool SaveBufferToImage() const;
 
+    void CycleLightingMode();
+
+    void ToggleShadows()
+    {
+        m_ShadowsEnabled = not m_ShadowsEnabled;
+    }
+
 private:
+    enum class LightingMode : uint8_t
+    {
+        ObservedArea,  // Lambert cosine law
+        Radiance,      // Incident radiance
+        BRDF,          // Scattering of the light
+        Combined,      // ObservedArea * Radiance * BRDF
+        Count
+    };
+
+    LightingMode m_CurrentLightingMode{ LightingMode::Combined };
+    bool m_ShadowsEnabled{ true };
+
     SDL_Window* m_pWindow{};
 
     SDL_Surface* m_pBuffer{};

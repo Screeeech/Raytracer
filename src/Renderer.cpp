@@ -60,15 +60,24 @@ void Renderer::Render(Scene* pScene) const
             ColorRGB finalColor{};
             if(closestHit.didHit)
             {
-                finalColor = materials[closestHit.materialIndex]->Shade();
                 for(const auto& light : lights)
                 {
                     Vector3 directionToLight{ LightUtils::GetDirectionToLight(light,
                                                                               closestHit.origin + (closestHit.normal * 0.01f)) };
                     const float distanceToLight{ directionToLight.Normalize() };
-                    const Ray hitToLightRay{
-                        .origin = closestHit.origin, .direction = directionToLight, .min = 0.0001f, .max = distanceToLight
-                    };
+                    const Ray hitToLightRay{ .origin = closestHit.origin, .direction = directionToLight, .max = distanceToLight };
+
+                    const Vector3 hitToCamera{ (camera.origin - closestHit.origin).Normalized() };
+
+                    const float lightDot{ Vector3::Dot(closestHit.normal, directionToLight) };
+                    const ColorRGB BRDFrgb{ pScene->GetMaterials()[closestHit.materialIndex]->Shade(closestHit, directionToLight,
+                                                                                                    hitToCamera) };
+
+                    if(lightDot < 0)
+                        continue;
+
+                    finalColor += LightUtils::GetRadiance(light, closestHit.origin) * BRDFrgb * lightDot;
+
                     if(pScene->DoesHit(hitToLightRay))
                         finalColor *= 0.5f;
                 }
@@ -89,4 +98,10 @@ void Renderer::Render(Scene* pScene) const
 bool Renderer::SaveBufferToImage() const
 {
     return SDL_SaveBMP(m_pBuffer, "RayTracing_Buffer.bmp");
+}
+
+void Renderer::CycleLightingMode()
+{
+    m_CurrentLightingMode = static_cast<Renderer::LightingMode>((static_cast<uint8_t>(m_CurrentLightingMode) + 1) %
+                                                                static_cast<uint8_t>(Renderer::LightingMode::Count));
 }

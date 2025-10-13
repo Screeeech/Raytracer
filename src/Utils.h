@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "ColorRGB.h"
 #include "DataTypes.h"
 #include "Math.h"
 #include "MathHelpers.h"
@@ -144,9 +145,22 @@ inline Vector3 GetDirectionToLight(const Light& light, const Vector3 origin)
 
 inline ColorRGB GetRadiance(const Light& light, const Vector3& target)
 {
-    // TODO: W3
-    throw std::runtime_error("Not Implemented Yet");
-    return {};
+    const Vector3 lightToTarget{ light.origin - target };
+    switch(light.type)
+    {
+        case LightType::Point:
+        {
+            const ColorRGB Ergb{ light.color * (light.intensity / lightToTarget.SqrMagnitude()) };
+            return Ergb;
+        }
+        case LightType::Directional:
+        {
+            const ColorRGB Ergb{ light.color * light.intensity };
+            return Ergb;
+        }
+        default:
+            break;
+    }
 }
 }  // namespace LightUtils
 
