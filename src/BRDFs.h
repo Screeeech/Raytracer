@@ -1,9 +1,12 @@
 #pragma once
 #include <cassert>
+#include <cmath>
 #include <stdexcept>
 
+#include "ColorRGB.h"
 #include "Math.h"
 #include "MathHelpers.h"
+#include "Vector3.h"
 
 namespace dae::BRDF
 {
@@ -34,9 +37,9 @@ static ColorRGB Lambert(const ColorRGB& kd, const ColorRGB& cd)
  */
 static ColorRGB Phong(float ks, float exp, const Vector3& l, const Vector3& v, const Vector3& n)
 {
-    // TODO:: W3
-    throw std::runtime_error("Not Implemented Yet");
-    return {};
+    const Vector3 reflect{ -l - (2 * Vector3::Dot(-l, n) * n) };
+    const float specularReflectanceFactor{ ks * std::pow(Vector3::Dot(reflect, v), exp) };
+    return ColorRGB{ .r = specularReflectanceFactor, .g = specularReflectanceFactor, .b = specularReflectanceFactor };
 }
 
 /**

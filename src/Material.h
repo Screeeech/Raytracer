@@ -96,9 +96,8 @@ public:
 
     ColorRGB Shade(const HitRecord& hitRecord = {}, const Vector3& l = {}, const Vector3& v = {}) override
     {
-        // TODO: W3
-        throw std::runtime_error("Not Implemented Yet");
-        return {};
+        return BRDF::Lambert(m_DiffuseReflectance, m_DiffuseColor) +
+            BRDF::Phong(m_SpecularReflectance, m_PhongExponent, l, v, hitRecord.normal);
     }
 
 private:
