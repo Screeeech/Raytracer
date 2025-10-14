@@ -140,7 +140,11 @@ namespace LightUtils
 // Direction from target to light
 inline Vector3 GetDirectionToLight(const Light& light, const Vector3 origin)
 {
-    return light.origin - origin;
+    if(light.type == LightType::Point)
+    {
+        return light.origin - origin;
+    }
+    return -light.direction * FLT_MAX;
 }
 
 inline ColorRGB GetRadiance(const Light& light, const Vector3& target)

@@ -62,24 +62,20 @@ void Renderer::Render(Scene* pScene) const
             {
                 for(const auto& light : lights)
                 {
-                    Vector3 directionToLight{ LightUtils::GetDirectionToLight(light,
-                                                                              closestHit.origin + (closestHit.normal * 0.01f)) };
-                    const float distanceToLight{ directionToLight.Normalize() };
-                    const Ray hitToLightRay{ .origin = closestHit.origin, .direction = directionToLight, .max = distanceToLight };
+                    Vector3 hitToLight{ LightUtils::GetDirectionToLight(light, closestHit.origin + (closestHit.normal * 0.01f)) };
+                    const float hitToLightDistance{ hitToLight.Normalize() };
+                    const Ray hitToLightRay{ .origin = closestHit.origin, .direction = hitToLight, .max = hitToLightDistance };
 
                     const Vector3 hitToCamera{ (camera.origin - closestHit.origin).Normalized() };
 
-                    const float lightDot{ Vector3::Dot(closestHit.normal, directionToLight) };
-                    const ColorRGB BRDFrgb{ pScene->GetMaterials()[closestHit.materialIndex]->Shade(closestHit, directionToLight,
-                                                                                                    hitToCamera) };
-
-                    if(lightDot < 0)
+                    const float lightDot{ Vector3::Dot(closestHit.normal, hitToLight) };
+                    if(lightDot < 0 or pScene->DoesHit(hitToLightRay))
                         continue;
 
-                    finalColor += LightUtils::GetRadiance(light, closestHit.origin) * BRDFrgb * lightDot;
-
-                    if(pScene->DoesHit(hitToLightRay))
-                        finalColor *= 0.5f;
+                    const ColorRGB Ergb{ LightUtils::GetRadiance(light, closestHit.origin) };
+                    const ColorRGB BRDFrgb{ pScene->GetMaterials()[closestHit.materialIndex]->Shade(closestHit, hitToLight,
+                                                                                                    hitToCamera) };
+                    finalColor += BRDFrgb * Ergb * lightDot;
                 }
             }
             finalColor.MaxToOne();

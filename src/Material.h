@@ -1,7 +1,9 @@
 #pragma once
 #include "BRDFs.h"
+#include "ColorRGB.h"
 #include "DataTypes.h"
 #include "Math.h"
+#include "Vector3.h"
 
 namespace dae
 {
@@ -124,13 +126,24 @@ public:
 
     ColorRGB Shade(const HitRecord& hitRecord = {}, const Vector3& l = {}, const Vector3& v = {}) override
     {
-        // TODO: W3
-        throw std::runtime_error("Not Implemented Yet");
-        return {};
+        const auto halfVector{ (l + v).Normalized() };
+        const ColorRGB dialectricAlbedo{ .r = 0.04, .g = 0.04, .b = 0.04 };
+
+        const auto f0{ m_Metalness == 0.f ? dialectricAlbedo : m_Albedo };
+        const auto D{ BRDF::NormalDistribution_GGX(hitRecord.normal, halfVector, m_Roughness) };
+        const auto F{ BRDF::FresnelFunction_Schlick(halfVector, v, f0) };
+        const auto G{ BRDF::GeometryFunction_Smith(hitRecord.normal, v, l, m_Roughness) };
+
+        const auto cookTorrence{ (D * F * G) /
+                                 (4 * Vector3::PositiveDot(v, hitRecord.normal) * Vector3::PositiveDot(l, hitRecord.normal)) };
+        const auto kd{ m_Metalness == 0.f ? colors::White - F : colors::Black };
+        const auto lambert{ BRDF::Lambert(kd, m_Albedo) };
+
+        return lambert + cookTorrence;
     }
 
 private:
-    ColorRGB m_Albedo{ 0.955f, 0.637f, 0.538f };  // Copper
+    ColorRGB m_Albedo{ .r = 0.955f, .g = 0.637f, .b = 0.538f };  // Copper
     float m_Metalness{ 1.0f };
     float m_Roughness{ 0.1f };  // [1.0 > 0.0] >> [ROUGH > SMOOTH]
 };

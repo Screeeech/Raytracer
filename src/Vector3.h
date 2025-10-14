@@ -22,6 +22,7 @@ struct Vector3 final
     [[nodiscard]] Vector3 Normalized() const;
 
     static float Dot(const Vector3& v1, const Vector3& v2);
+    static float PositiveDot(const Vector3& v1, const Vector3& v2);
     static Vector3 Cross(const Vector3& v1, const Vector3& v2);
     static Vector3 Project(const Vector3& v1, const Vector3& v2);
     static Vector3 Reject(const Vector3& v1, const Vector3& v2);
