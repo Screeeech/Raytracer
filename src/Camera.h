@@ -16,13 +16,11 @@ struct Camera final
 
     Camera(const Vector3& _origin, float _fovAngle)
         : origin{ _origin }
-        , fovAngle{ _fovAngle }
-        , fov{ tanf((PI / 180.f) * fovAngle / 2) }
+        , fov{ tanf((PI / 180.f) * _fovAngle / 2) }
     {
     }
 
     Vector3 origin;
-    float fovAngle{};
     float fov{};
 
     Vector3 forward{ Vector3::UnitZ };
@@ -33,6 +31,11 @@ struct Camera final
     float totalYaw{ 0.f };
 
     Matrix cameraToWorld;
+
+    void UpdateFOV(float fovAngle)
+    {
+        fov = tanf((PI / 180.f) * fovAngle / 2);
+    }
 
     Matrix CalculateCameraToWorld()
     {

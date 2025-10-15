@@ -152,7 +152,7 @@ void Scene_W1::Initialize()
 void Scene_W2::Initialize()
 {
     m_Camera.origin = { 0.f, 3.f, -9.f };
-    m_Camera.fovAngle = 45.f;
+    m_Camera.UpdateFOV(45.f);
     // default: Material ide >> SolidColor Material (RED)
     constexpr unsigned char matId_Solid_Red = 0;
     const unsigned char matId_Solid_Blue = AddMaterial(new Material_SolidColor{ colors::Blue });
@@ -195,7 +195,7 @@ void Scene_W3::Initialize()
 
 
     m_Camera.origin = { 0.f, 3.f, -9.f };
-    m_Camera.fovAngle = 45.f;
+    m_Camera.UpdateFOV(45.f);
 
     auto const matCT_GrayRoughMetal{ AddMaterial(new Material_CookTorrence({ .r = .972f, .g = .960f, .b = .915f }, 1.f, 1.f)) };
     auto const matCT_GrayMediumMetal{ AddMaterial(new Material_CookTorrence({ .r = .972f, .g = .960f, .b = .915f }, 1.f, .6f)) };
