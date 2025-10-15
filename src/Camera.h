@@ -17,11 +17,13 @@ struct Camera final
     Camera(const Vector3& _origin, float _fovAngle)
         : origin{ _origin }
         , fovAngle{ _fovAngle }
+        , fov{ tanf((PI / 180.f) * fovAngle / 2) }
     {
     }
 
     Vector3 origin;
     float fovAngle{};
+    float fov{};
 
     Vector3 forward{ Vector3::UnitZ };
     Vector3 up{ Vector3::UnitY };
@@ -95,11 +97,6 @@ struct Camera final
 
         forward = Matrix::CreateRotationY(totalYaw).TransformVector(
             Matrix::CreateRotationX(totalPitch).TransformVector(Vector3::UnitZ));
-    }
-
-    [[nodiscard]] float GetFov() const
-    {
-        return tanf((PI / 180.f) * fovAngle / 2);
     }
 };
 }  // namespace dae

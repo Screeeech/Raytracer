@@ -55,6 +55,7 @@ if(LINUX)
   find_package(SDL2 REQUIRED)
   include_directories(${SDL2_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
+  target_link_options(${PROJECT_NAME} PRIVATE -ltbb)
 
 else()
   message(STATUS "Linux not detected. Assuming win32")

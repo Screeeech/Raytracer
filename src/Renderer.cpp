@@ -1,16 +1,15 @@
 // External includes
 #include "ColorRGB.h"
 #include "DataTypes.h"
-#include "MathHelpers.h"
-#include "SDL.h"
 #include "SDL_pixels.h"
 #include "SDL_surface.h"
 
 // Project includes
-#include <iostream>
+#include <algorithm>
+#include <execution>
+#include <numeric>
 
 #include "Material.h"
-#include "Math.h"
 #include "Matrix.h"
 #include "Renderer.h"
 #include "Scene.h"
@@ -26,6 +25,9 @@ Renderer::Renderer(SDL_Window* pWindow)
 {
     // Initialize
     SDL_GetWindowSize(pWindow, &m_Width, &m_Height);
+    const uint32_t pixelCount{ static_cast<uint32_t>(m_Width * m_Height) };
+    m_PixelIndices.resize(pixelCount);
+    std::iota(m_PixelIndices.begin(), m_PixelIndices.end(), 0);
 }
 
 void Renderer::Render(Scene* pScene) const
@@ -34,13 +36,15 @@ void Renderer::Render(Scene* pScene) const
     const auto& materials = pScene->GetMaterials();
     const auto& lights = pScene->GetLights();
     static const float aspectRatio{ static_cast<float>(m_Width) / static_cast<float>(m_Height) };
+    const float fov{ camera.fov };
 
-    for(int px{}; px < m_Width; ++px)
-    {
-        for(int py{}; py < m_Height; ++py)
+
+    std::for_each(
+        std::execution::par, m_PixelIndices.begin(), m_PixelIndices.end(),
+        [&](const uint32_t pixelIdx)
         {
-            // TODO: Optimise by caching FOV
-            const float fov{ camera.GetFov() };
+            const auto px{ pixelIdx % m_Width };
+            const auto py{ pixelIdx / m_Width };
 
             // Get camera position
             const Vector3 ndc{ ((2.F * (static_cast<float>(px) + 0.5F) / static_cast<float>(m_Width)) - 1) * aspectRatio * fov,
@@ -83,8 +87,7 @@ void Renderer::Render(Scene* pScene) const
             m_pBufferPixels[px + (py * m_Width)] =
                 SDL_MapRGB(m_pBuffer->format, static_cast<uint8_t>(finalColor.r * 255), static_cast<uint8_t>(finalColor.g * 255),
                            static_cast<uint8_t>(finalColor.b * 255));
-        }
-    }
+        });
 
     //@END
     // Update SDL Surface

@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 
 struct SDL_Window;
 struct SDL_Surface;
@@ -7,6 +8,8 @@ struct SDL_Surface;
 namespace dae
 {
 class Scene;
+class HitRecord;
+class ColorRGB;
 
 class Renderer final
 {
@@ -49,5 +52,6 @@ private:
 
     int m_Width{};
     int m_Height{};
+    std::vector<int> m_PixelIndices;
 };
 }  // namespace dae
