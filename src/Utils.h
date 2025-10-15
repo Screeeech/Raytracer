@@ -105,8 +105,38 @@ inline bool HitTest_Plane(const Plane& plane, const Ray& ray)
 // TRIANGLE HIT-TESTS
 inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
-    // TODO: W5
-    throw std::runtime_error("Not Implemented Yet");
+    const auto vn{ Vector3::Dot(ray.direction, triangle.normal) };
+    if(AreEqual(vn, 0.f) or vn > 0)  // vn > 0 -> backface
+        return false;
+
+    const auto rayToVert{ triangle.v0 - ray.origin };
+    const auto t{ Vector3::Dot(rayToVert, triangle.normal) / vn };
+
+    if(t < ray.min or t > ray.max)
+        return false;
+
+    const auto hitPoint{ ray.origin + (ray.direction * t) };
+    auto isPointOutTriangle = [hitPoint, triangle](const Vector3& vertex1, const Vector3& vertex2) -> bool
+    {
+        const Vector3 e{ vertex1, vertex2 };
+        const Vector3 p{ vertex1, hitPoint };
+        return Vector3::Dot(Vector3::Cross(e, p), triangle.normal) < 0;
+    };
+
+    if(not(isPointOutTriangle(triangle.v0, triangle.v1) or isPointOutTriangle(triangle.v1, triangle.v2) or
+           isPointOutTriangle(triangle.v2, triangle.v0)))
+    {
+        if(not ignoreHitRecord)
+        {
+            hitRecord.origin = hitPoint;
+            hitRecord.didHit = true;
+            hitRecord.t = t;
+            hitRecord.materialIndex = triangle.materialIndex;
+            hitRecord.normal = triangle.normal;
+        }
+        return true;
+    }
+
     return false;
 }
 
@@ -122,7 +152,7 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
 inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
     // TODO: W5
-    throw std::runtime_error("Not Implemented Yet");
+    throw std::runtime_error("");
     return false;
 }
 
@@ -196,13 +226,17 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vector3>& position
         else if(sCommand == "v")
         {
             // Vertex
-            float x, y, z;
+            float x{};
+            float y{};
+            float z{};
             file >> x >> y >> z;
-            positions.push_back({ x, y, z });
+            positions.emplace_back(x, y, z);
         }
         else if(sCommand == "f")
         {
-            float i0, i1, i2;
+            float i0{};
+            float i1{};
+            float i2{};
             file >> i0 >> i1 >> i2;
 
             indices.push_back((int)i0 - 1);

@@ -68,6 +68,7 @@ protected:
     std::vector<Plane> m_PlaneGeometries;
     std::vector<Sphere> m_SphereGeometries;
     std::vector<TriangleMesh> m_TriangleMeshGeometries;
+    std::vector<Triangle> m_Triangles;
     std::vector<Light> m_Lights;
     std::vector<Material*> m_Materials;
 
@@ -122,6 +123,20 @@ public:
     Scene_W3(const Scene_W3&) = delete;
     Scene_W3& operator=(Scene_W3&&) = delete;
     Scene_W3& operator=(const Scene_W3&) = delete;
+
+    void Initialize() override;
+};
+
+class Scene_W4 final : public Scene
+{
+public:
+    Scene_W4() = default;
+    ~Scene_W4() override = default;
+
+    Scene_W4(Scene_W4&&) = delete;
+    Scene_W4(const Scene_W4&) = delete;
+    Scene_W4& operator=(Scene_W4&&) = delete;
+    Scene_W4& operator=(const Scene_W4&) = delete;
 
     void Initialize() override;
 };

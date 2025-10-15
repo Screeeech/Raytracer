@@ -49,7 +49,7 @@ int main(int argc, char* args[])
     auto* const pRenderer = new Renderer(pWindow);
 
     // auto* const pScene = new Scene_W1();
-    auto* const pScene = new Scene_W3();
+    auto* const pScene = new Scene_W4();
     pScene->Initialize();
 
     // Start loop
