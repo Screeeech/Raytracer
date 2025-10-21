@@ -142,23 +142,20 @@ struct TriangleMesh final
 
     void CalculateNormals()
     {
-        size_t i{};
-        std::array<int, 3> triVertexIndices{};
-        for(const int index : indices)
+        for(size_t i{}; i < indices.size(); i += 3)
         {
-            triVertexIndices.at(i) = index;
-            ++i;
-            if(i >= 2)
-            {
-                const Vector3 vectorA{ positions[triVertexIndices[0]], positions[triVertexIndices[1]] };
-                const Vector3 vectorB{ positions[triVertexIndices[1]], positions[triVertexIndices[2]] };
-                normals.push_back((Vector3::Cross(vectorA, vectorB)).Normalized());
-                i = 0;
-            }
+            const auto vert0{ positions[indices[i + 0]] };
+            const auto vert1{ positions[indices[i + 1]] };
+            const auto vert2{ positions[indices[i + 2]] };
+
+            const Vector3 vectorA{ vert0, vert1 };
+            const Vector3 vectorB{ vert1, vert2 };
+            normals.push_back((Vector3::Cross(vectorA, vectorB)).Normalized());
         }
     }
 
     void UpdateTransforms()
+
     {
         for(const Vector3& position : positions)
         {
