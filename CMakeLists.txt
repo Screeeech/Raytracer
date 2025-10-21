@@ -18,19 +18,46 @@ set(SOURCES
     "src/Vector4.cpp"
 )
 
+set(HEADERS
+    "include/BRDFs.h"
+    "include/Camera.h"
+    "include/ColorRGB.h"
+    "include/DataTypes.h"
+    "include/LeakDetector.h"
+    "include/Material.h"
+    "include/Math.h"
+    "include/MathHelpers.h"
+    "include/Matrix.h"
+    "include/Renderer.h"
+    "include/Scene.h"
+    "include/Timer.h"
+    "include/Utils.h"
+    "include/Vector2.h"
+    "include/Vector3.h"
+    "include/Vector4.h"
+)
+
 # Create the executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+target_include_directories(
+  ${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
 
 # DirectX11
 option(DIRECTX_11_ENABLED "Enable DirectX 11 Support" OFF)
 if(DIRECTX_11_ENABLED)
   find_library(DXGI_LIBRARY dxgi.lib)
   find_library(D3D11_LIBRARY d3d11.lib)
+
   if(DXGI_LIBRARY AND D3D11_LIBRARY)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${DXGI_LIBRARY} ${D3D11_LIBRARY})
+    target_link_libraries(
+      ${PROJECT_NAME} PRIVATE ${DXGI_LIBRARY} ${D3D11_LIBRARY}
+    )
   else()
     message(FATAL_ERROR "DirectX libraries not found")
   endif()
+
 endif()
 
 # Copy resources to output folder
@@ -53,7 +80,10 @@ endforeach(RESOURCE)
 if(LINUX)
   message(STATUS "Linux detected")
   find_package(SDL2 REQUIRED)
-  include_directories(${SDL2_INCLUDE_DIRS})
+  target_include_directories(${PROJECT_NAME} PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/libs/SDL2-2.30.7/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/libs/SDL2_image-2.8.2/include"
+  )
   target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
   target_link_options(${PROJECT_NAME} PRIVATE -ltbb)
 
