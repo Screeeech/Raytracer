@@ -1,5 +1,4 @@
 #pragma once
-#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <fstream>
@@ -7,7 +6,6 @@
 
 #include "ColorRGB.h"
 #include "DataTypes.h"
-#include "Math.h"
 #include "MathHelpers.h"
 #include "Vector3.h"
 
@@ -165,8 +163,23 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
 
 inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
-    // TODO: W5
-    throw std::runtime_error("");
+    size_t triIndex{};
+    for(size_t i{}; i < mesh.indices.size(); i += 3)
+    {
+        Triangle tri{ mesh.positions[mesh.indices[i + 0]], mesh.positions[mesh.indices[i + 1]],
+                      mesh.positions[mesh.indices[i + 2]], mesh.normals[triIndex] };
+        ++triIndex;
+
+        if(not HitTest_Triangle(tri, ray, hitRecord))
+            continue;
+
+        if(ignoreHitRecord)
+            return true;
+
+        hitRecord.didHit = true;
+        hitRecord.materialIndex = mesh.materialIndex;
+        hitRecord.normal = tri.normal;
+    }
     return false;
 }
 
@@ -218,12 +231,15 @@ namespace Utils
 #pragma warning(push)
 #pragma warning(disable : 4505)  // Warning unreferenced local function
 
-static bool ParseOBJ(const std::string& filename, std::vector<Vector3>& positions, std::vector<Vector3>& normals,
-                     std::vector<int>& indices)
+static bool ParseOBJ(const std::string& filename, std::vector<Vector3>& positions, std::vector<int>& indices,
+                     std::vector<Vector3>& normals)
 {
     std::ifstream file(filename);
-    if(!file)
+    if(not file)
+    {
+        std::cerr << "The file: " << filename << " could not be loaded\n";
         return false;
+    }
 
     std::string sCommand;
     // start a while iteration ending when the end of file is reached (ios::eof)

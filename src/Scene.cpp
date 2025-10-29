@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include <algorithm>
+#include <fstream>
 
 #include "ColorRGB.h"
 #include "DataTypes.h"
@@ -51,6 +52,12 @@ void dae::Scene::GetClosestHit(const Ray& ray, HitRecord& closestHit) const
     for(const Triangle& triangle : m_Triangles)
     {
         GeometryUtils::HitTest_Triangle(triangle, ray, currentHit);
+        if(currentHit.t < closestHit.t)
+            closestHit = currentHit;
+    }
+    for(const TriangleMesh& mesh : m_TriangleMeshGeometries)
+    {
+        GeometryUtils::HitTest_TriangleMesh(mesh, ray, currentHit);
         if(currentHit.t < closestHit.t)
             closestHit = currentHit;
     }
@@ -255,11 +262,16 @@ void Scene_W4::Initialize()
     AddPlane({ 5.f, 0.f, 0.f }, { -1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Right
     AddPlane({ -5.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Left
 
-    auto triangle{ Triangle({ -.75f, .5f, 0.f }, { -0.75f, 2.f, 0.f }, { .75f, .5f, 0.f }) };
-    triangle.cullMode = TriangleCullMode::BackFaceCulling;
-    triangle.materialIndex = matLambert_White;
 
-    m_Triangles.emplace_back(triangle);
+    std::vector<Vector3> positions;
+    std::vector<int> indices;
+    std::vector<Vector3> normals;
+
+    const std::string filePath{ "resources/lowpoly_bunny.obj" };
+    Utils::ParseOBJ(filePath, positions, indices, normals);
+    const TriangleMesh bunnyMesh{ positions, indices, normals, TriangleCullMode::BackFaceCulling };
+
+    m_TriangleMeshGeometries.push_back(bunnyMesh);
 
     // Lights
     AddPointLight({ 0.f, 5.f, 5.f }, 50.f, ColorRGB{ .r = 1.f, .g = .61f, .b = .45f });    // Backlight
