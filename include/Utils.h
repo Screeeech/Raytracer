@@ -106,8 +106,22 @@ inline bool HitTest_Plane(const Plane& plane, const Ray& ray)
 inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
     const auto vn{ Vector3::Dot(ray.direction, triangle.normal) };
-    if(AreEqual(vn, 0.f) or vn > 0)  // vn > 0 -> backface
+    if(AreEqual(vn, 0.f))
         return false;
+
+    switch(triangle.cullMode)
+    {
+        case TriangleCullMode::FrontFaceCulling:
+            if(vn < 0)
+                return false;
+            break;
+        case TriangleCullMode::BackFaceCulling:
+            if(vn > 0)
+                return false;
+            break;
+        case TriangleCullMode::NoCulling:
+            break;
+    }
 
     const auto rayToVert{ triangle.v0 - ray.origin };
     const auto t{ Vector3::Dot(rayToVert, triangle.normal) / vn };

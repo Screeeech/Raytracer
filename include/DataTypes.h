@@ -155,7 +155,6 @@ struct TriangleMesh final
     }
 
     void UpdateTransforms()
-
     {
         for(const Vector3& position : positions)
         {

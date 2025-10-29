@@ -245,7 +245,7 @@ void Scene_W4::Initialize()
     m_Camera.origin = { 0.f, 3.f, -9.f };
     m_Camera.UpdateFOV(45.f);
 
-    unsigned char const matLambert_GrayBlue{ AddMaterial(new Material_Lambert({ .49f, .57f, .57f }, 1.f)) };
+    unsigned char const matLambert_GrayBlue{ AddMaterial(new Material_Lambert({ .r = .49f, .g = .57f, .b = .57f }, 1.f)) };
     unsigned char const matLambert_White{ AddMaterial(new Material_Lambert(colors::White, 1.f)) };
 
     // Planes
@@ -256,15 +256,15 @@ void Scene_W4::Initialize()
     AddPlane({ -5.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Left
 
     auto triangle{ Triangle({ -.75f, .5f, 0.f }, { -0.75f, 2.f, 0.f }, { .75f, .5f, 0.f }) };
-    triangle.cullMode = TriangleCullMode::NoCulling;
+    triangle.cullMode = TriangleCullMode::BackFaceCulling;
     triangle.materialIndex = matLambert_White;
 
     m_Triangles.emplace_back(triangle);
 
     // Lights
-    AddPointLight({ 0.f, 5.f, 5.f }, 50.f, ColorRGB{ 1.f, .61f, .45f });    // Backlight
-    AddPointLight({ -2.5f, 5.f, -5.f }, 70.f, ColorRGB{ 1.f, .8f, .45f });  // Front light left
-    AddPointLight({ 2.5f, 2.5f, -5.f }, 50.f, ColorRGB{ .34f, .47f, .68f });
+    AddPointLight({ 0.f, 5.f, 5.f }, 50.f, ColorRGB{ .r = 1.f, .g = .61f, .b = .45f });    // Backlight
+    AddPointLight({ -2.5f, 5.f, -5.f }, 70.f, ColorRGB{ .r = 1.f, .g = .8f, .b = .45f });  // Front light left
+    AddPointLight({ 2.5f, 2.5f, -5.f }, 50.f, ColorRGB{ .r = .34f, .g = .47f, .b = .68f });
 }
 
 #pragma endregion
