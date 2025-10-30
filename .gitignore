@@ -1,5 +1,6 @@
 /libs
 /build
+/build-win
 /.cache
 /out
 compile_commands.json
