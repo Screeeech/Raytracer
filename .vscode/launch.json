@@ -9,7 +9,7 @@
       "preLaunchTask": "build-debug",
       "postDebugTask": "clean",
       "expressions": "native",
-      "program": "${workspaceFolder}/build/raytracer-starter"
+      "program": "${workspaceFolder}/build/raytracer"
     },
     {
       "type": "codelldb",
@@ -19,7 +19,7 @@
       "preLaunchTask": "build-release",
       "postDebugTask": "clean",
       "expressions": "native",
-      "program": "${workspaceFolder}/build/raytracer-starter"
+      "program": "${workspaceFolder}/build/raytracer"
     }
   ]
 }
