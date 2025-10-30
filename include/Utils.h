@@ -164,22 +164,21 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
 inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
     size_t triIndex{};
+    HitRecord closestHit;
     for(size_t i{}; i < mesh.indices.size(); i += 3)
     {
         Triangle tri{ mesh.transformedPositions[mesh.indices[i + 0]], mesh.transformedPositions[mesh.indices[i + 1]],
                       mesh.transformedPositions[mesh.indices[i + 2]], mesh.transformedNormals[triIndex] };
         ++triIndex;
 
-        if(not HitTest_Triangle(tri, ray, hitRecord))
-            continue;
-
-        if(ignoreHitRecord)
-            return true;
-
-        hitRecord.didHit = true;
-        hitRecord.materialIndex = mesh.materialIndex;
-        hitRecord.normal = tri.normal;
+        HitRecord currentHit{};
+        HitTest_Triangle(tri, ray, currentHit);
+        if(currentHit.t < closestHit.t)
+            closestHit = currentHit;
     }
+
+    hitRecord = closestHit;
+    hitRecord.materialIndex = mesh.materialIndex;
     return false;
 }
 

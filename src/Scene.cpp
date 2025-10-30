@@ -263,7 +263,7 @@ void Scene_W4::Initialize()
     AddPlane({ -5.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Left
 
 
-    const std::string filePath{ "resources/simple_cube.obj" };
+    const std::string filePath{ "resources/simple_object.obj" };
     pMesh = AddTriangleMesh(TriangleCullMode::BackFaceCulling, matLambert_White);
     Utils::ParseOBJ(filePath, pMesh->positions, pMesh->indices, pMesh->normals);
 
