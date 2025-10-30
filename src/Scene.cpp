@@ -263,17 +263,13 @@ void Scene_W4::Initialize()
     AddPlane({ -5.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Left
 
 
-    const std::string filePath{ "resources/simple_object.obj" };
+    const std::string filePath{ "resources/lowpoly_bunny.obj" };
     pMesh = AddTriangleMesh(TriangleCullMode::BackFaceCulling, matLambert_White);
-    Utils::ParseOBJ(filePath, pMesh->positions, pMesh->indices, pMesh->normals);
+    Utils::ParseOBJ(filePath, pMesh->vertices, pMesh->indices, pMesh->normals);
 
-    // pMesh = AddTriangleMesh(TriangleCullMode::BackFaceCulling, matLambert_White);
-    // pMesh->positions = { { -.75f, -1.f, .0f }, { -.75f, 1.f, .0f }, { .75f, 1.f, 1.f }, { .75f, -1.f, 0.f } };
-    // pMesh->indices = { { 0, 1, 2, 0, 2, 3 } };
+    pMesh->Scale({ 2.f, 2.f, 2.f });
 
-    pMesh->Scale({ .7f, .7f, .7f });
-    pMesh->Translate({ 0.f, 2.f, 0.f });
-
+    pMesh->UpdateAABB();
     pMesh->UpdateTransforms();
 
     // Lights
@@ -289,6 +285,8 @@ void Scene_W4::Update(Timer* pTimer)
     float const rotation{ PI_DIV_2 * pTimer->GetTotal() };
 
     pMesh->RotateY(rotation);
+
+    pMesh->UpdateAABB();
     pMesh->UpdateTransforms();
 }
 

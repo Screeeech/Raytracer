@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <complex>
 #include <cstdint>
 #include <vector>
@@ -70,8 +71,8 @@ struct TriangleMesh final
 {
     TriangleMesh() = default;
 
-    TriangleMesh(const std::vector<Vector3>& _positions, const std::vector<int>& _indices, TriangleCullMode _cullMode)
-        : positions(_positions)
+    TriangleMesh(const std::vector<Vector3>& _vertices, const std::vector<int>& _indices, TriangleCullMode _cullMode)
+        : vertices(_vertices)
         , indices(_indices)
         , cullMode(_cullMode)
     {
@@ -82,9 +83,9 @@ struct TriangleMesh final
         UpdateTransforms();
     }
 
-    TriangleMesh(const std::vector<Vector3>& _positions, const std::vector<int>& _indices, const std::vector<Vector3>& _normals,
+    TriangleMesh(const std::vector<Vector3>& _vertices, const std::vector<int>& _indices, const std::vector<Vector3>& _normals,
                  TriangleCullMode _cullMode)
-        : positions(_positions)
+        : vertices(_vertices)
         , normals(_normals)
         , indices(_indices)
         , cullMode(_cullMode)
@@ -92,7 +93,7 @@ struct TriangleMesh final
         UpdateTransforms();
     }
 
-    std::vector<Vector3> positions;
+    std::vector<Vector3> vertices;
     std::vector<Vector3> normals;
     std::vector<int> indices;
     unsigned char materialIndex{};
@@ -103,8 +104,15 @@ struct TriangleMesh final
     Matrix translationTransform;
     Matrix scaleTransform;
 
-    std::vector<Vector3> transformedPositions;
+    std::vector<Vector3> transformedVertices;
     std::vector<Vector3> transformedNormals;
+
+
+    Vector3 minObjectAABB;
+    Vector3 maxObjectAABB;
+
+    Vector3 minWorldAABB;
+    Vector3 maxWorldAABB;
 
     void Translate(const Vector3& translation)
     {
@@ -123,11 +131,11 @@ struct TriangleMesh final
 
     void AppendTriangle(const Triangle& triangle, bool ignoreTransformUpdate = false)
     {
-        int startIndex = static_cast<int>(positions.size());
+        int startIndex = static_cast<int>(vertices.size());
 
-        positions.push_back(triangle.v0);
-        positions.push_back(triangle.v1);
-        positions.push_back(triangle.v2);
+        vertices.push_back(triangle.v0);
+        vertices.push_back(triangle.v1);
+        vertices.push_back(triangle.v2);
 
         indices.push_back(startIndex);
         indices.push_back(++startIndex);
@@ -144,9 +152,9 @@ struct TriangleMesh final
     {
         for(size_t i{}; i < indices.size(); i += 3)
         {
-            const auto vert0{ positions[indices[i + 0]] };
-            const auto vert1{ positions[indices[i + 1]] };
-            const auto vert2{ positions[indices[i + 2]] };
+            const auto vert0{ vertices[indices[i + 0]] };
+            const auto vert1{ vertices[indices[i + 1]] };
+            const auto vert2{ vertices[indices[i + 2]] };
 
             const Vector3 vectorA{ vert0, vert1 };
             const Vector3 vectorB{ vert1, vert2 };
@@ -156,25 +164,79 @@ struct TriangleMesh final
 
     void UpdateTransforms()
     {
-        if(transformedPositions.size() < positions.size() or transformedNormals.size() < normals.size())
+        if(transformedVertices.size() < vertices.size() or transformedNormals.size() < normals.size())
         {
-            transformedPositions.resize(positions.size());
+            transformedVertices.resize(vertices.size());
             transformedNormals.resize(normals.size());
         }
 
+        Matrix finalTransform = scaleTransform * rotationTransform * translationTransform;
 
-        for(size_t i{}; i < positions.size(); ++i)
+        transformedVertices.clear();
+        transformedNormals.clear();
+
+        for(auto const& vertex : vertices)
         {
-            auto transformedPosition = scaleTransform.TransformPoint(positions[i]);
-            transformedPosition = rotationTransform.TransformPoint(transformedPosition);
-            transformedPosition = translationTransform.TransformPoint(transformedPosition);
-            transformedPositions[i] = transformedPosition;
+            transformedVertices.emplace_back(finalTransform.TransformPoint(vertex));
         }
 
-        for(size_t i{}; i < normals.size(); ++i)
+        for(auto const& normal : normals)
         {
-            transformedNormals[i] = rotationTransform.TransformPoint(normals[i]);
+            transformedNormals.emplace_back(rotationTransform.TransformPoint(normal));
         }
+
+        UpdateTransformedAABB(finalTransform);
+    }
+
+    void UpdateAABB()
+    {
+        if(vertices.size() > 0)
+        {
+            minObjectAABB = vertices[0];
+            maxObjectAABB = vertices[0];
+            for(auto const& vertex : vertices)
+            {
+                minObjectAABB = Vector3::Min(vertex, minObjectAABB);
+                maxObjectAABB = Vector3::Max(vertex, maxObjectAABB);
+            }
+        }
+    }
+
+    void UpdateTransformedAABB(const Matrix& finalTransform)
+    {
+        Vector3 tMinAABB = finalTransform.TransformPoint(minObjectAABB);
+        Vector3 tMaxAABB = tMinAABB;
+
+        Vector3 tAABB = finalTransform.TransformPoint(maxObjectAABB.x, minObjectAABB.y, minObjectAABB.z);
+        tMinAABB = Vector3::Min(tAABB, tMinAABB);
+        tMaxAABB = Vector3::Max(tAABB, tMaxAABB);
+
+        tAABB = finalTransform.TransformPoint(maxObjectAABB.x, minObjectAABB.y, maxObjectAABB.z);
+        tMinAABB = Vector3::Min(tAABB, tMinAABB);
+        tMaxAABB = Vector3::Max(tAABB, tMaxAABB);
+
+        tAABB = finalTransform.TransformPoint(minObjectAABB.x, minObjectAABB.y, maxObjectAABB.z);
+        tMinAABB = Vector3::Min(tAABB, tMinAABB);
+        tMaxAABB = Vector3::Max(tAABB, tMaxAABB);
+
+        tAABB = finalTransform.TransformPoint(minObjectAABB.x, maxObjectAABB.y, minObjectAABB.z);
+        tMinAABB = Vector3::Min(tAABB, tMinAABB);
+        tMaxAABB = Vector3::Max(tAABB, tMaxAABB);
+
+        tAABB = finalTransform.TransformPoint(maxObjectAABB.x, maxObjectAABB.y, minObjectAABB.z);
+        tMinAABB = Vector3::Min(tAABB, tMinAABB);
+        tMaxAABB = Vector3::Max(tAABB, tMaxAABB);
+
+        tAABB = finalTransform.TransformPoint(maxObjectAABB.x, maxObjectAABB.y, maxObjectAABB.z);
+        tMinAABB = Vector3::Min(tAABB, tMinAABB);
+        tMaxAABB = Vector3::Max(tAABB, tMaxAABB);
+
+        tAABB = finalTransform.TransformPoint(minObjectAABB.x, maxObjectAABB.y, maxObjectAABB.z);
+        tMinAABB = Vector3::Min(tAABB, tMinAABB);
+        tMaxAABB = Vector3::Max(tAABB, tMaxAABB);
+
+        minWorldAABB = tMinAABB;
+        maxWorldAABB = tMaxAABB;
     }
 };
 

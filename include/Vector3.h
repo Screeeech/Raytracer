@@ -27,6 +27,8 @@ struct Vector3 final
     static Vector3 Project(const Vector3& v1, const Vector3& v2);
     static Vector3 Reject(const Vector3& v1, const Vector3& v2);
     static Vector3 Reflect(const Vector3& v1, const Vector3& v2);
+    static Vector3 Min(const Vector3& v1, const Vector3& v2);
+    static Vector3 Max(const Vector3& v1, const Vector3& v2);
 
     [[nodiscard]] Vector4 ToPoint4() const;
     [[nodiscard]] Vector4 ToVector4() const;

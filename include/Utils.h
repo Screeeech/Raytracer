@@ -161,14 +161,40 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray)
 #pragma endregion
 #pragma region TriangeMesh HitTest
 
+inline bool SlabTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray)
+{
+    float tx1 = (mesh.minWorldAABB.x - ray.origin.x) / ray.direction.x;
+    float tx2 = (mesh.maxWorldAABB.x - ray.origin.x) / ray.direction.x;
+
+    float tmin = std::min(tx1, tx2);
+    float tmax = std::max(tx1, tx2);
+
+    float ty1 = (mesh.minWorldAABB.y - ray.origin.y) / ray.direction.y;
+    float ty2 = (mesh.maxWorldAABB.y - ray.origin.y) / ray.direction.y;
+
+    tmin = std::max(tmin, std::min(ty1, ty2));
+    tmax = std::min(tmax, std::max(ty1, ty2));
+
+    float tz1 = (mesh.minWorldAABB.z - ray.origin.z) / ray.direction.z;
+    float tz2 = (mesh.maxWorldAABB.z - ray.origin.z) / ray.direction.z;
+
+    tmin = std::max(tmin, std::min(tz1, tz2));
+    tmax = std::min(tmax, std::max(tz1, tz2));
+
+    return tmax > 0 and tmax >= tmin;
+}
+
 inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
+    if(not SlabTest_TriangleMesh(mesh, ray))
+        return false;
+
     size_t triIndex{};
     HitRecord closestHit;
     for(size_t i{}; i < mesh.indices.size(); i += 3)
     {
-        Triangle tri{ mesh.transformedPositions[mesh.indices[i + 0]], mesh.transformedPositions[mesh.indices[i + 1]],
-                      mesh.transformedPositions[mesh.indices[i + 2]], mesh.transformedNormals[triIndex] };
+        Triangle tri{ mesh.transformedVertices[mesh.indices[i + 0]], mesh.transformedVertices[mesh.indices[i + 1]],
+                      mesh.transformedVertices[mesh.indices[i + 2]], mesh.transformedNormals[triIndex] };
         ++triIndex;
 
         HitRecord currentHit{};
@@ -219,7 +245,7 @@ inline ColorRGB GetRadiance(const Light& light, const Vector3& target)
             return Ergb;
         }
         default:
-            break;
+            return {};
     }
 }
 }  // namespace LightUtils
