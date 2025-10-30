@@ -1,11 +1,11 @@
 #include "Scene.h"
 
 #include <algorithm>
-#include <fstream>
 
 #include "ColorRGB.h"
 #include "DataTypes.h"
 #include "Material.h"
+#include "MathHelpers.h"
 #include "Utils.h"
 
 namespace dae
@@ -263,20 +263,33 @@ void Scene_W4::Initialize()
     AddPlane({ -5.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, matLambert_GrayBlue);   // Left
 
 
-    std::vector<Vector3> positions;
-    std::vector<int> indices;
-    std::vector<Vector3> normals;
+    const std::string filePath{ "resources/simple_cube.obj" };
+    pMesh = AddTriangleMesh(TriangleCullMode::BackFaceCulling, matLambert_White);
+    Utils::ParseOBJ(filePath, pMesh->positions, pMesh->indices, pMesh->normals);
 
-    const std::string filePath{ "resources/lowpoly_bunny.obj" };
-    Utils::ParseOBJ(filePath, positions, indices, normals);
-    const TriangleMesh bunnyMesh{ positions, indices, normals, TriangleCullMode::BackFaceCulling };
+    // pMesh = AddTriangleMesh(TriangleCullMode::BackFaceCulling, matLambert_White);
+    // pMesh->positions = { { -.75f, -1.f, .0f }, { -.75f, 1.f, .0f }, { .75f, 1.f, 1.f }, { .75f, -1.f, 0.f } };
+    // pMesh->indices = { { 0, 1, 2, 0, 2, 3 } };
 
-    m_TriangleMeshGeometries.push_back(bunnyMesh);
+    pMesh->Scale({ .7f, .7f, .7f });
+    pMesh->Translate({ 0.f, 2.f, 0.f });
+
+    pMesh->UpdateTransforms();
 
     // Lights
     AddPointLight({ 0.f, 5.f, 5.f }, 50.f, ColorRGB{ .r = 1.f, .g = .61f, .b = .45f });    // Backlight
     AddPointLight({ -2.5f, 5.f, -5.f }, 70.f, ColorRGB{ .r = 1.f, .g = .8f, .b = .45f });  // Front light left
     AddPointLight({ 2.5f, 2.5f, -5.f }, 50.f, ColorRGB{ .r = .34f, .g = .47f, .b = .68f });
+}
+
+void Scene_W4::Update(Timer* pTimer)
+{
+    Scene::Update(pTimer);
+
+    float const rotation{ PI_DIV_2 * pTimer->GetTotal() };
+
+    pMesh->RotateY(rotation);
+    pMesh->UpdateTransforms();
 }
 
 #pragma endregion

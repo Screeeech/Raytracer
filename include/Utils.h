@@ -110,11 +110,11 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord
     switch(triangle.cullMode)
     {
         case TriangleCullMode::FrontFaceCulling:
-            if(vn < 0)
+            if(vn > 0)
                 return false;
             break;
         case TriangleCullMode::BackFaceCulling:
-            if(vn > 0)
+            if(vn < 0)
                 return false;
             break;
         case TriangleCullMode::NoCulling:
@@ -166,8 +166,8 @@ inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRe
     size_t triIndex{};
     for(size_t i{}; i < mesh.indices.size(); i += 3)
     {
-        Triangle tri{ mesh.positions[mesh.indices[i + 0]], mesh.positions[mesh.indices[i + 1]],
-                      mesh.positions[mesh.indices[i + 2]], mesh.normals[triIndex] };
+        Triangle tri{ mesh.transformedPositions[mesh.indices[i + 0]], mesh.transformedPositions[mesh.indices[i + 1]],
+                      mesh.transformedPositions[mesh.indices[i + 2]], mesh.transformedNormals[triIndex] };
         ++triIndex;
 
         if(not HitTest_Triangle(tri, ray, hitRecord))
@@ -247,6 +247,7 @@ static bool ParseOBJ(const std::string& filename, std::vector<Vector3>& position
     {
         // read the first word of the string, use the >> operator
         // (istream::operator>>)
+        sCommand = "";
         file >> sCommand;
         // use conditional statements to process the different commands
         if(sCommand == "#")

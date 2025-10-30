@@ -1,10 +1,10 @@
 #pragma once
-#include <array>
+#include <complex>
 #include <cstdint>
-#include <stdexcept>
 #include <vector>
 
-#include "Math.h"
+#include "ColorRGB.h"
+#include "Matrix.h"
 #include "Vector3.h"
 
 namespace dae
@@ -156,20 +156,24 @@ struct TriangleMesh final
 
     void UpdateTransforms()
     {
-        for(const Vector3& position : positions)
+        if(transformedPositions.size() < positions.size() or transformedNormals.size() < normals.size())
         {
-            auto transformedPosition = translationTransform.TransformPoint(position);
-            transformedPosition = rotationTransform.TransformPoint(transformedPosition);
-            transformedPosition = scaleTransform.TransformPoint(transformedPosition);
-            transformedPositions.push_back(transformedPosition);
+            transformedPositions.resize(positions.size());
+            transformedNormals.resize(normals.size());
         }
 
-        for(const Vector3& normal : normals)
+
+        for(size_t i{}; i < positions.size(); ++i)
         {
-            auto transformedNormal = translationTransform.TransformPoint(normal);
-            transformedNormal = rotationTransform.TransformPoint(transformedNormal);
-            transformedNormal = scaleTransform.TransformPoint(transformedNormal);
-            transformedNormals.push_back(transformedNormal);
+            auto transformedPosition = scaleTransform.TransformPoint(positions[i]);
+            transformedPosition = rotationTransform.TransformPoint(transformedPosition);
+            transformedPosition = translationTransform.TransformPoint(transformedPosition);
+            transformedPositions[i] = transformedPosition;
+        }
+
+        for(size_t i{}; i < normals.size(); ++i)
+        {
+            transformedNormals[i] = rotationTransform.TransformPoint(normals[i]);
         }
     }
 };
@@ -206,8 +210,8 @@ struct Ray final
 
 struct HitRecord final
 {
-    Vector3 origin{};
-    Vector3 normal{};
+    Vector3 origin;
+    Vector3 normal;
     float t = FLT_MAX;
 
     bool didHit{ false };

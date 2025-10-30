@@ -4,7 +4,6 @@
 
 #include "Camera.h"
 #include "DataTypes.h"
-#include "Math.h"
 
 namespace dae
 {
@@ -139,6 +138,10 @@ public:
     Scene_W4& operator=(const Scene_W4&) = delete;
 
     void Initialize() override;
+    void Update(Timer* pTimer) override;
+
+private:
+    TriangleMesh* pMesh{ nullptr };
 };
 
 }  // namespace dae
