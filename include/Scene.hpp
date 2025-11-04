@@ -1,9 +1,10 @@
 #pragma once
+#include <array>
 #include <string>
 #include <vector>
 
-#include "Camera.h"
-#include "DataTypes.h"
+#include "Camera.hpp"
+#include "DataTypes.hpp"
 
 namespace dae
 {
@@ -62,8 +63,6 @@ public:
     }
 
 protected:
-    std::string sceneName;
-
     std::vector<Plane> m_PlaneGeometries;
     std::vector<Sphere> m_SphereGeometries;
     std::vector<TriangleMesh> m_TriangleMeshGeometries;
@@ -126,22 +125,34 @@ public:
     void Initialize() override;
 };
 
-class Scene_W4 final : public Scene
+class Scene_W4_BunnyScene final : public Scene
 {
 public:
-    Scene_W4() = default;
-    ~Scene_W4() override = default;
+    Scene_W4_BunnyScene() = default;
+    ~Scene_W4_BunnyScene() override = default;
 
-    Scene_W4(Scene_W4&&) = delete;
-    Scene_W4(const Scene_W4&) = delete;
-    Scene_W4& operator=(Scene_W4&&) = delete;
-    Scene_W4& operator=(const Scene_W4&) = delete;
+    Scene_W4_BunnyScene(Scene_W4_BunnyScene&&) = delete;
+    Scene_W4_BunnyScene(const Scene_W4_BunnyScene&) = delete;
+    Scene_W4_BunnyScene& operator=(Scene_W4_BunnyScene&&) = delete;
+    Scene_W4_BunnyScene& operator=(const Scene_W4_BunnyScene&) = delete;
 
     void Initialize() override;
     void Update(Timer* pTimer) override;
+};
 
-private:
-    TriangleMesh* pMesh{ nullptr };
+class Scene_W4_ReferenceScene final : public Scene
+{
+public:
+    Scene_W4_ReferenceScene() = default;
+    ~Scene_W4_ReferenceScene() override = default;
+
+    Scene_W4_ReferenceScene(Scene_W4_ReferenceScene&&) = delete;
+    Scene_W4_ReferenceScene(const Scene_W4_ReferenceScene&) = delete;
+    Scene_W4_ReferenceScene& operator=(Scene_W4_ReferenceScene&&) = delete;
+    Scene_W4_ReferenceScene& operator=(const Scene_W4_ReferenceScene&) = delete;
+
+    void Initialize() override;
+    void Update(Timer* pTimer) override;
 };
 
 }  // namespace dae

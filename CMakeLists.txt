@@ -19,22 +19,22 @@ set(SOURCES
 )
 
 set(HEADERS
-    "include/BRDFs.h"
-    "include/Camera.h"
-    "include/ColorRGB.h"
-    "include/DataTypes.h"
-    "include/LeakDetector.h"
-    "include/Material.h"
-    "include/Math.h"
-    "include/MathHelpers.h"
-    "include/Matrix.h"
-    "include/Renderer.h"
-    "include/Scene.h"
-    "include/Timer.h"
-    "include/Utils.h"
-    "include/Vector2.h"
-    "include/Vector3.h"
-    "include/Vector4.h"
+    "include/BRDFs.hpp"
+    "include/Camera.hpp"
+    "include/ColorRGB.hpp"
+    "include/DataTypes.hpp"
+    "include/LeakDetector.hpp"
+    "include/Material.hpp"
+    "include/Math.hpp"
+    "include/MathHelpers.hpp"
+    "include/Matrix.hpp"
+    "include/Renderer.hpp"
+    "include/Scene.hpp"
+    "include/Timer.hpp"
+    "include/Utils.hpp"
+    "include/Vector2.hpp"
+    "include/Vector3.hpp"
+    "include/Vector4.hpp"
 )
 
 # Create the executable

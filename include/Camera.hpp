@@ -2,11 +2,11 @@
 #include <SDL_keyboard.h>
 #include <SDL_mouse.h>
 
-#include "Math.h"
-#include "Matrix.h"
+#include "Math.hpp"
+#include "Matrix.hpp"
 #include "SDL_scancode.h"
-#include "Timer.h"
-#include "Vector3.h"
+#include "Timer.hpp"
+#include "Vector3.hpp"
 
 namespace dae
 {

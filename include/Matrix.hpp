@@ -1,6 +1,6 @@
 #pragma once
-#include "Vector3.h"
-#include "Vector4.h"
+#include "Vector3.hpp"
+#include "Vector4.hpp"
 
 namespace dae
 {

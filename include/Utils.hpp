@@ -4,10 +4,10 @@
 #include <fstream>
 #include <iostream>
 
-#include "ColorRGB.h"
-#include "DataTypes.h"
-#include "MathHelpers.h"
-#include "Vector3.h"
+#include "ColorRGB.hpp"
+#include "DataTypes.hpp"
+#include "MathHelpers.hpp"
+#include "Vector3.hpp"
 
 namespace dae
 {

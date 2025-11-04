@@ -1,19 +1,19 @@
-#include "Renderer.h"
+
+#include "Renderer.hpp"
 
 #include <algorithm>
 #include <cstdint>
 #include <execution>
 #include <numeric>
 
-#include "ColorRGB.h"
-#include "DataTypes.h"
-#include "Material.h"
-#include "Matrix.h"
-#include "Scene.h"
-#include "SDL_pixels.h"
+#include "ColorRGB.hpp"
+#include "DataTypes.hpp"
+#include "Material.hpp"
+#include "Matrix.hpp"
+#include "Scene.hpp"
 #include "SDL_surface.h"
-#include "Utils.h"
-#include "Vector3.h"
+#include "Utils.hpp"
+#include "Vector3.hpp"
 
 using namespace dae;
 

@@ -1,9 +1,9 @@
 #pragma once
-#include "BRDFs.h"
-#include "ColorRGB.h"
-#include "DataTypes.h"
-#include "Math.h"
-#include "Vector3.h"
+#include "BRDFs.hpp"
+#include "ColorRGB.hpp"
+#include "DataTypes.hpp"
+#include "Math.hpp"
+#include "Vector3.hpp"
 
 namespace dae
 {

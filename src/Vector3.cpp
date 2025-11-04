@@ -1,11 +1,11 @@
-#include "Vector3.h"
+#include "Vector3.hpp"
 
 #include <cassert>
 #include <cmath>
 
-#include "MathHelpers.h"
-#include "Vector2.h"
-#include "Vector4.h"
+#include "MathHelpers.hpp"
+#include "Vector2.hpp"
+#include "Vector4.hpp"
 
 namespace dae
 {

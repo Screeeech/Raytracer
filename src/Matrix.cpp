@@ -1,11 +1,9 @@
-#include "Matrix.h"
+#include "Matrix.hpp"
 
 #include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <limits>
-
-#include "MathHelpers.h"
 
 namespace dae
 {
@@ -37,8 +35,7 @@ Vector3 Matrix::TransformVector(const Vector3& v) const
 
 Vector3 Matrix::TransformVector(float x, float y, float z) const
 {
-    return Vector3{ data[0].x * x + data[1].x * y + data[2].x * z,
-                    data[0].y * x + data[1].y * y + data[2].y * z,
+    return Vector3{ data[0].x * x + data[1].x * y + data[2].x * z, data[0].y * x + data[1].y * y + data[2].y * z,
                     data[0].z * x + data[1].z * y + data[2].z * z };
 }
 

@@ -3,10 +3,10 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "ColorRGB.h"
-#include "Math.h"
-#include "MathHelpers.h"
-#include "Vector3.h"
+#include "ColorRGB.hpp"
+#include "Math.hpp"
+#include "MathHelpers.hpp"
+#include "Vector3.hpp"
 
 namespace dae::BRDF
 {

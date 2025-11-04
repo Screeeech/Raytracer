@@ -6,11 +6,11 @@
 #include <iostream>
 
 // Project includes
-#include "Renderer.h"
-#include "Scene.h"
-#include "Timer.h"
+#include "Renderer.hpp"
+#include "Scene.hpp"
+#include "Timer.hpp"
 #if defined(_DEBUG)
-#include "LeakDetector.h"
+#include "LeakDetector.hpp"
 #endif
 
 using namespace dae;
@@ -49,7 +49,7 @@ int main(int argc, char* args[])
     auto* const pRenderer = new Renderer(pWindow);
 
     // auto* const pScene = new Scene_W1();
-    auto* const pScene = new Scene_W4();
+    auto* const pScene = new Scene_W4_ReferenceScene();
     pScene->Initialize();
 
     // Start loop
