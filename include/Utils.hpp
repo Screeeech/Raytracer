@@ -110,12 +110,34 @@ inline bool HitTest_Triangle(const Triangle& triangle, const Ray& ray, HitRecord
     switch(triangle.cullMode)
     {
         case TriangleCullMode::FrontFaceCulling:
-            if(vn > 0)
-                return false;
+            if(ignoreHitRecord)
+            {
+                if(vn > 0)
+                    return false;
+            }
+            else
+            {
+                if(vn < 0)
+                {
+                    hitRecord.didHit = false;
+                    return false;
+                }
+            }
             break;
         case TriangleCullMode::BackFaceCulling:
-            if(vn < 0)
-                return false;
+            if(ignoreHitRecord)
+            {
+                if(vn < 0)
+                    return false;
+            }
+            else
+            {
+                if(vn > 0)
+                {
+                    hitRecord.didHit = false;
+                    return false;
+                }
+            }
             break;
         case TriangleCullMode::NoCulling:
             break;
@@ -195,13 +217,21 @@ inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRe
         ++triIndex;
 
         HitRecord currentHit{};
-        HitTest_Triangle(tri, ray, currentHit);
+        if(HitTest_Triangle(tri, ray, currentHit, ignoreHitRecord) and ignoreHitRecord)
+            return true;
+
         if(currentHit.t < closestHit.t)
             closestHit = currentHit;
     }
 
-    hitRecord = closestHit;
-    hitRecord.materialIndex = mesh.materialIndex;
+    if(not ignoreHitRecord)
+    {
+        hitRecord = closestHit;
+        hitRecord.materialIndex = mesh.materialIndex;
+
+        if(hitRecord.didHit)
+            return true;
+    }
     return false;
 }
 
