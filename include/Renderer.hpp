@@ -28,13 +28,10 @@ public:
     void ProcessInput(const SDL_Event& e);
 
     void CycleLightingMode();
+    void ToggleShadows();
     bool IsInShadow(const Scene* pScene, const Light& light, const HitRecord& closestHit) const;
     [[nodiscard]] ColorRGB CalculateLighting(const Scene* pScene, const HitRecord& closestHit) const;
 
-    void ToggleShadows()
-    {
-        m_ShadowsEnabled = not m_ShadowsEnabled;
-    }
 
 private:
     enum class LightingMode : uint8_t

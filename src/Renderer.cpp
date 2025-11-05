@@ -81,26 +81,6 @@ bool Renderer::SaveBufferToImage() const
     return SDL_SaveBMP(m_pBuffer, "RayTracing_Buffer.bmp");
 }
 
-void Renderer::CycleLightingMode()
-{
-    switch(m_CurrentLightingMode)
-    {
-        case LightingMode::ObservedArea:
-            m_CurrentLightingMode = LightingMode::Radiance;
-            break;
-        case LightingMode::Radiance:
-            m_CurrentLightingMode = LightingMode::BRDF;
-            break;
-        case LightingMode::BRDF:
-            m_CurrentLightingMode = LightingMode::Combined;
-            break;
-        case LightingMode::Combined:
-        case LightingMode::Count:
-            m_CurrentLightingMode = LightingMode::ObservedArea;
-            break;
-    }
-}
-
 bool Renderer::IsInShadow(const Scene* pScene, const Light& light, const HitRecord& closestHit) const
 {
     if(not m_ShadowsEnabled)
@@ -123,27 +103,30 @@ ColorRGB Renderer::CalculateLighting(const Scene* pScene, const HitRecord& close
     ColorRGB lighting{};
     for(const auto& light : lights)
     {
-        if(IsInShadow(pScene, light, closestHit))
-            continue;
-
-        const Vector3 hitToCamera{ (pScene->GetCameraOrigin() - closestHit.origin).Normalized() };
         const Vector3 hitToLight{ (light.origin - closestHit.origin).Normalized() };
         const float observedArea{ Vector3::Dot(closestHit.normal, hitToLight) };
 
+        if(IsInShadow(pScene, light, closestHit) or observedArea <= 0)
+            continue;
+
+        const Vector3 hitToCamera{ (pScene->GetCameraOrigin() - closestHit.origin).Normalized() };
         const ColorRGB Ergb{ LightUtils::GetRadiance(light, closestHit.origin) };
         const ColorRGB BRDFrgb{ pScene->GetMaterials()[closestHit.materialIndex]->Shade(closestHit, hitToLight, hitToCamera) };
-
 
         switch(m_CurrentLightingMode)
         {
             case LightingMode::ObservedArea:
                 lighting += Ergb * observedArea;
+                break;
             case LightingMode::Radiance:
                 lighting += Ergb;
+                break;
             case LightingMode::BRDF:
                 lighting += BRDFrgb;
+                break;
             case LightingMode::Combined:
                 lighting += Ergb * BRDFrgb * observedArea;
+                break;
             default:
                 break;
         }
@@ -166,5 +149,30 @@ void Renderer::ProcessInput(const SDL_Event& e)
             default:
                 break;
         }
+    }
+}
+
+void Renderer::ToggleShadows()
+{
+    m_ShadowsEnabled = not m_ShadowsEnabled;
+}
+
+void Renderer::CycleLightingMode()
+{
+    switch(m_CurrentLightingMode)
+    {
+        case LightingMode::ObservedArea:
+            m_CurrentLightingMode = LightingMode::Radiance;
+            break;
+        case LightingMode::Radiance:
+            m_CurrentLightingMode = LightingMode::BRDF;
+            break;
+        case LightingMode::BRDF:
+            m_CurrentLightingMode = LightingMode::Combined;
+            break;
+        case LightingMode::Combined:
+        case LightingMode::Count:
+            m_CurrentLightingMode = LightingMode::ObservedArea;
+            break;
     }
 }
