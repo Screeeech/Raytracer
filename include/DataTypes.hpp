@@ -39,18 +39,21 @@ struct Triangle final
 {
     Triangle() = default;
 
-    Triangle(const Vector3& _v0, const Vector3& _v1, const Vector3& _v2, const Vector3& _normal)
+    Triangle(const Vector3& _v0, const Vector3& _v1, const Vector3& _v2, const Vector3& _normal,
+             TriangleCullMode _cullMode = TriangleCullMode::NoCulling)
         : v0{ _v0 }
         , v1{ _v1 }
         , v2{ _v2 }
         , normal{ _normal.Normalized() }
+        , cullMode(_cullMode)
     {
     }
 
-    Triangle(const Vector3& _v0, const Vector3& _v1, const Vector3& _v2)
+    Triangle(const Vector3& _v0, const Vector3& _v1, const Vector3& _v2, TriangleCullMode _cullMode = TriangleCullMode::NoCulling)
         : v0{ _v0 }
         , v1{ _v1 }
         , v2{ _v2 }
+        , cullMode(_cullMode)
     {
         const Vector3 edgeV0V1 = v1 - v0;
         const Vector3 edgeV0V2 = v2 - v0;

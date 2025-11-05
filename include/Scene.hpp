@@ -1,6 +1,4 @@
 #pragma once
-#include <array>
-#include <string>
 #include <vector>
 
 #include "Camera.hpp"

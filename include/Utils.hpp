@@ -194,7 +194,7 @@ inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRe
     for(size_t i{}; i < mesh.indices.size(); i += 3)
     {
         Triangle tri{ mesh.transformedVertices[mesh.indices[i + 0]], mesh.transformedVertices[mesh.indices[i + 1]],
-                      mesh.transformedVertices[mesh.indices[i + 2]], mesh.transformedNormals[triIndex] };
+                      mesh.transformedVertices[mesh.indices[i + 2]], mesh.transformedNormals[triIndex], mesh.cullMode };
         ++triIndex;
 
         HitRecord currentHit{};

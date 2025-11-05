@@ -100,6 +100,20 @@ bool Renderer::SaveBufferToImage() const
 
 void Renderer::CycleLightingMode()
 {
-    m_CurrentLightingMode = static_cast<Renderer::LightingMode>((static_cast<uint8_t>(m_CurrentLightingMode) + 1) %
-                                                                static_cast<uint8_t>(Renderer::LightingMode::Count));
+    switch(m_CurrentLightingMode)
+    {
+        case LightingMode::ObservedArea:
+            m_CurrentLightingMode = LightingMode::Radiance;
+            break;
+        case LightingMode::Radiance:
+            m_CurrentLightingMode = LightingMode::BRDF;
+            break;
+        case LightingMode::BRDF:
+            m_CurrentLightingMode = LightingMode::Combined;
+            break;
+        case LightingMode::Combined:
+        case LightingMode::Count:
+            m_CurrentLightingMode = LightingMode::ObservedArea;
+            break;
+    }
 }

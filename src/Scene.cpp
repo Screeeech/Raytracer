@@ -72,7 +72,11 @@ bool Scene::DoesHit(const Ray& ray) const
     return std::ranges::any_of(m_SphereGeometries.cbegin(), m_SphereGeometries.cend(),
                                [ray](const Sphere& sphere) { return GeometryUtils::HitTest_Sphere(sphere, ray); }) or
         std::ranges::any_of(m_PlaneGeometries.cbegin(), m_PlaneGeometries.cend(),
-                            [ray](const Plane& plane) { return GeometryUtils::HitTest_Plane(plane, ray); });
+                            [ray](const Plane& plane) { return GeometryUtils::HitTest_Plane(plane, ray); }) or
+        std::ranges::any_of(m_Triangles.cbegin(), m_Triangles.cend(),
+                            [ray](const Triangle& triangle) { return GeometryUtils::HitTest_Triangle(triangle, ray); }) or
+        std::ranges::any_of(m_TriangleMeshGeometries.cbegin(), m_TriangleMeshGeometries.cend(),
+                            [ray](const TriangleMesh& mesh) { return GeometryUtils::HitTest_TriangleMesh(mesh, ray); });
 }
 
 #pragma region Scene Helpers
