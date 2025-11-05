@@ -3,6 +3,7 @@
 
 #include "Camera.hpp"
 #include "DataTypes.hpp"
+#include "Vector3.hpp"
 
 namespace dae
 {
@@ -35,6 +36,11 @@ public:
     Camera& GetCamera()
     {
         return m_Camera;
+    }
+
+    [[nodiscard]] Vector3 GetCameraOrigin() const
+    {
+        return m_Camera.origin;
     }
 
     void GetClosestHit(const Ray& ray, HitRecord& closestHit) const;

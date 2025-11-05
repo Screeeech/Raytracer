@@ -61,6 +61,9 @@ void dae::Scene::GetClosestHit(const Ray& ray, HitRecord& closestHit) const
 
     for(const TriangleMesh& mesh : m_TriangleMeshGeometries)
     {
+        if(not GeometryUtils::SlabTest_TriangleMesh(mesh, ray))
+            continue;
+
         GeometryUtils::HitTest_TriangleMesh(mesh, ray, currentHit);
         if(currentHit.t < closestHit.t)
             closestHit = currentHit;

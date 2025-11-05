@@ -79,6 +79,7 @@ int main(int argc, char* args[])
                 default:
                     break;
             }
+            pRenderer->ProcessInput(e);
         }
 
         //--------- Update ---------

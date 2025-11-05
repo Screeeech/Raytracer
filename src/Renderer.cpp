@@ -11,6 +11,7 @@
 #include "Material.hpp"
 #include "Matrix.hpp"
 #include "Scene.hpp"
+#include "SDL_events.h"
 #include "SDL_surface.h"
 #include "Utils.hpp"
 #include "Vector3.hpp"
@@ -32,8 +33,6 @@ Renderer::Renderer(SDL_Window* pWindow)
 void Renderer::Render(Scene* pScene) const
 {
     Camera& camera = pScene->GetCamera();
-    const auto& materials = pScene->GetMaterials();
-    const auto& lights = pScene->GetLights();
     static const float aspectRatio{ static_cast<float>(m_Width) / static_cast<float>(m_Height) };
     const float fov{ camera.fov };
 
@@ -63,23 +62,7 @@ void Renderer::Render(Scene* pScene) const
             ColorRGB finalColor{};
             if(closestHit.didHit)
             {
-                for(const auto& light : lights)
-                {
-                    Vector3 hitToLight{ LightUtils::GetDirectionToLight(light, closestHit.origin + (closestHit.normal * 0.01f)) };
-                    const float hitToLightDistance{ hitToLight.Normalize() };
-                    const Ray hitToLightRay{ .origin = closestHit.origin, .direction = hitToLight, .max = hitToLightDistance };
-
-                    const Vector3 hitToCamera{ (camera.origin - closestHit.origin).Normalized() };
-
-                    const float lightDot{ Vector3::Dot(closestHit.normal, hitToLight) };
-                    if(lightDot < 0 or pScene->DoesHit(hitToLightRay))
-                        continue;
-
-                    const ColorRGB Ergb{ LightUtils::GetRadiance(light, closestHit.origin) };
-                    const ColorRGB BRDFrgb{ pScene->GetMaterials()[closestHit.materialIndex]->Shade(closestHit, hitToLight,
-                                                                                                    hitToCamera) };
-                    finalColor += BRDFrgb * Ergb * lightDot;
-                }
+                finalColor = CalculateLighting(pScene, closestHit);
             }
             finalColor.MaxToOne();
 
@@ -115,5 +98,73 @@ void Renderer::CycleLightingMode()
         case LightingMode::Count:
             m_CurrentLightingMode = LightingMode::ObservedArea;
             break;
+    }
+}
+
+bool Renderer::IsInShadow(const Scene* pScene, const Light& light, const HitRecord& closestHit) const
+{
+    if(not m_ShadowsEnabled)
+        return false;
+
+    Vector3 hitToLight{ LightUtils::GetDirectionToLight(light, closestHit.origin + (closestHit.normal * 0.01f)) };
+    const float hitToLightDistance{ hitToLight.Normalize() };
+    const Ray hitToLightRay{ .origin = closestHit.origin, .direction = hitToLight, .max = hitToLightDistance };
+
+    const float lightDot{ Vector3::Dot(closestHit.normal, hitToLight) };
+
+    return lightDot < 0 or pScene->DoesHit(hitToLightRay);
+}
+
+ColorRGB Renderer::CalculateLighting(const Scene* pScene, const HitRecord& closestHit) const
+{
+    const auto& materials = pScene->GetMaterials();
+    const auto& lights = pScene->GetLights();
+
+    ColorRGB lighting{};
+    for(const auto& light : lights)
+    {
+        if(IsInShadow(pScene, light, closestHit))
+            continue;
+
+        const Vector3 hitToCamera{ (pScene->GetCameraOrigin() - closestHit.origin).Normalized() };
+        const Vector3 hitToLight{ (light.origin - closestHit.origin).Normalized() };
+        const float observedArea{ Vector3::Dot(closestHit.normal, hitToLight) };
+
+        const ColorRGB Ergb{ LightUtils::GetRadiance(light, closestHit.origin) };
+        const ColorRGB BRDFrgb{ pScene->GetMaterials()[closestHit.materialIndex]->Shade(closestHit, hitToLight, hitToCamera) };
+
+
+        switch(m_CurrentLightingMode)
+        {
+            case LightingMode::ObservedArea:
+                lighting += Ergb * observedArea;
+            case LightingMode::Radiance:
+                lighting += Ergb;
+            case LightingMode::BRDF:
+                lighting += BRDFrgb;
+            case LightingMode::Combined:
+                lighting += Ergb * BRDFrgb * observedArea;
+            default:
+                break;
+        }
+    }
+    return lighting;
+}
+
+void Renderer::ProcessInput(const SDL_Event& e)
+{
+    if(e.type == SDL_KEYUP)
+    {
+        switch(e.key.keysym.scancode)
+        {
+            case SDL_SCANCODE_F2:
+                ToggleShadows();
+                break;
+            case SDL_SCANCODE_F3:
+                CycleLightingMode();
+                break;
+            default:
+                break;
+        }
     }
 }

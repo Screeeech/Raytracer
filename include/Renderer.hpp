@@ -2,14 +2,15 @@
 #include <cstdint>
 #include <vector>
 
+#include "DataTypes.hpp"
+#include "SDL_events.h"
+
 struct SDL_Window;
 struct SDL_Surface;
 
 namespace dae
 {
 class Scene;
-class HitRecord;
-class ColorRGB;
 
 class Renderer final
 {
@@ -24,8 +25,11 @@ public:
 
     void Render(Scene* pScene) const;
     [[nodiscard]] bool SaveBufferToImage() const;
+    void ProcessInput(const SDL_Event& e);
 
     void CycleLightingMode();
+    bool IsInShadow(const Scene* pScene, const Light& light, const HitRecord& closestHit) const;
+    [[nodiscard]] ColorRGB CalculateLighting(const Scene* pScene, const HitRecord& closestHit) const;
 
     void ToggleShadows()
     {
