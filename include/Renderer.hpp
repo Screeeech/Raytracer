@@ -32,7 +32,6 @@ public:
     bool IsInShadow(const Scene* pScene, const Light& light, const HitRecord& closestHit) const;
     [[nodiscard]] ColorRGB CalculateLighting(const Scene* pScene, const HitRecord& closestHit) const;
 
-
 private:
     enum class LightingMode : uint8_t
     {

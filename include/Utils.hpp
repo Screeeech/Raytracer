@@ -208,6 +208,9 @@ inline bool SlabTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray)
 
 inline bool HitTest_TriangleMesh(const TriangleMesh& mesh, const Ray& ray, HitRecord& hitRecord, bool ignoreHitRecord = false)
 {
+    if(not GeometryUtils::SlabTest_TriangleMesh(mesh, ray))
+        return false;
+
     size_t triIndex{};
     HitRecord closestHit;
     for(size_t i{}; i < mesh.indices.size(); i += 3)
