@@ -52,7 +52,10 @@ struct Camera final
 
     void Update(Timer* pTimer)
     {
-        static constexpr float rotSpeed{ PI };
+        static constexpr float rotSpeed{ 0.05 };
+        static constexpr float moveSpeedMouse{ 0.75f };
+        static constexpr float moveSpeedKeyboard{ 3.f };
+
         const float deltaTime = pTimer->GetElapsed();
 
         // Keyboard Input
@@ -63,38 +66,36 @@ struct Camera final
         int mouseY{};
         const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
 
-        Move(pKeyboardState, deltaTime);
-        Rotate(mouseState, mouseX, mouseY, deltaTime);
+        // Panning with L+R
+        if(mouseState == (SDL_BUTTON_LMASK | SDL_BUTTON_RMASK))
+        {
+            origin += right * deltaTime * moveSpeedMouse * static_cast<float>(mouseX);
+            origin -= up * deltaTime * moveSpeedMouse * static_cast<float>(mouseY);
+        }
+        else if(mouseState == SDL_BUTTON_LMASK)
+        {
+            origin += forward * deltaTime * moveSpeedMouse * static_cast<float>(mouseY);
+            Rotate(static_cast<float>(mouseX) * deltaTime * rotSpeed, 0);
+        }
+        else if(mouseState == SDL_BUTTON_RMASK)
+        {
+            Rotate(static_cast<float>(mouseX) * deltaTime * rotSpeed, -static_cast<float>(mouseY) * deltaTime * rotSpeed);
+        }
+        else
+        {
+            if(pKeyboardState[SDL_SCANCODE_W])
+                origin += forward * moveSpeedKeyboard * deltaTime;
+            if(pKeyboardState[SDL_SCANCODE_A])
+                origin -= right * moveSpeedKeyboard * deltaTime;
+            if(pKeyboardState[SDL_SCANCODE_S])
+                origin -= forward * moveSpeedKeyboard * deltaTime;
+            if(pKeyboardState[SDL_SCANCODE_D])
+                origin += right * moveSpeedKeyboard * deltaTime;
+        }
     }
 
-    void Move(const uint8_t* pKeyboardState, float deltaTime)
+    void Rotate(float deltaYaw, float deltaPitch)
     {
-        static constexpr float moveSpeed{ 3.f };
-
-        if(pKeyboardState[SDL_SCANCODE_W])
-            origin += forward * moveSpeed * deltaTime;
-        if(pKeyboardState[SDL_SCANCODE_A])
-            origin -= right * moveSpeed * deltaTime;
-        if(pKeyboardState[SDL_SCANCODE_S])
-            origin -= forward * moveSpeed * deltaTime;
-        if(pKeyboardState[SDL_SCANCODE_D])
-            origin += right * moveSpeed * deltaTime;
-        if(pKeyboardState[SDL_SCANCODE_SPACE])
-            origin += up * moveSpeed * deltaTime;
-        if(pKeyboardState[SDL_SCANCODE_LSHIFT])
-            origin -= up * moveSpeed * deltaTime;
-    }
-
-    void Rotate(const uint32_t& mouseState, int mouseX, int mouseY, float deltaTime)
-    {
-        static constexpr float rotSpeed{ PI / 16 };
-
-        if(not(SDL_BUTTON_LEFT & mouseState))
-            return;
-
-        float deltaYaw{ static_cast<float>(mouseX) * rotSpeed * deltaTime };
-        float deltaPitch{ static_cast<float>(-mouseY) * rotSpeed * deltaTime };
-
         totalYaw += deltaYaw;
         totalPitch += deltaPitch;
 
